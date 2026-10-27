@@ -1,864 +1,2797 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nominative, Accusative &amp; Slang</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#16213E;--navy2:#24325A;--cream:#FBF6EC;--paper:#FFFDF8;
-  --yellow:#FFC857;--coral:#FF6F59;--teal:#2EC4B6;--lilac:#A99BFF;
-  --tealT:#D5F3EF;--coralT:#FFDCD5;--yellowT:#FFEFC4;--lilacT:#E4DEFF;
-  --muted:#4A5568;--tealD:#0B7A70;--coralD:#C2401F;
-  --display:'Fredoka','Trebuchet MS',sans-serif;
-}
-*{box-sizing:border-box}
-html{font-size:clamp(15px, min(1.62vw, 2.95vh), 34px)}
-html,body{height:100%;margin:0}
-body{background:var(--navy);font-family:'Nunito Sans',Arial,sans-serif;color:var(--navy);overflow:hidden}
-
-/* ---------- slides ---------- */
-.slide{position:absolute;inset:0;display:none;overflow-y:auto;background:var(--cream);color:var(--navy);padding:2rem 4rem 4.2rem}
-.slide.active{display:block;animation:in .45s cubic-bezier(.2,.8,.2,1)}
-.slide.back.active{animation:inBack .45s cubic-bezier(.2,.8,.2,1)}
-@keyframes in{from{opacity:0;transform:translateX(2rem)}to{opacity:1;transform:none}}
-@keyframes inBack{from{opacity:0;transform:translateX(-2rem)}to{opacity:1;transform:none}}
-.wrap{position:relative;max-width:54rem;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:1rem}
-.dark{background:var(--navy);color:var(--cream)}
-.sun{background:var(--yellow)}
-.lilac{background:var(--lilac)}
-
-.eyebrow{align-self:flex-start;font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.28rem .95rem;border-radius:2rem;background:var(--yellow);color:var(--navy)}
-.eyebrow.teal{background:var(--teal)}.eyebrow.coral{background:var(--coral)}.eyebrow.lilac{background:var(--lilac)}
-.eyebrow.navy{background:var(--navy);color:var(--cream)}
-.tags{display:flex;gap:.5rem;flex-wrap:wrap}
-
-h1,h2,h3{font-family:var(--display);font-weight:600;margin:0}
-h1{font-size:3.3rem;line-height:1.02}
-h2{font-size:2.25rem;line-height:1.1}
-h3{font-size:1.35rem;line-height:1.15}
-p{margin:0;font-size:1rem;line-height:1.4}
-.sm{font-size:.82rem}
-.muted{color:var(--muted)}
-.dark .muted{color:#C9D3EA}
-.sun .muted,.lilac .muted{color:#3B3420}
-.lilac .muted{color:#2C2466}
-
-.grid{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--min,15rem)),1fr))}
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:1rem}
-.card{background:var(--paper);border:3px solid var(--line,#ECE4D3);border-radius:.8rem;padding:.75rem 1.1rem;display:flex;flex-direction:column;gap:.3rem}
-.dark .card{background:var(--navy2);border-color:transparent}
-.sun .card,.lilac .card{background:var(--cream);border-color:transparent}
-.nom{--line:var(--tealT)}.akk{--line:var(--coralT)}
-.fill-teal{background:var(--tealT);border-color:transparent}
-.fill-yellow{background:var(--yellowT);border-color:transparent}
-.fill-lilac{background:var(--lilacT);border-color:transparent}
-.fill-coral{background:var(--coralT);border-color:transparent}
-.n{color:var(--tealD);font-weight:800}.a{color:var(--coralD);font-weight:800}
-.dark .n{color:#5FE0D3}.dark .a{color:#FF9A8A}
-
-.callout{background:var(--navy);color:var(--cream);border-radius:.9rem;padding:.75rem 1.2rem;display:flex;gap:.9rem;align-items:center}
-.dark .callout{background:var(--yellow);color:var(--navy)}
-.callout .ico{font-size:1.4rem;line-height:1}
-
-.bigq{border-radius:1rem;padding:1.4rem;display:flex;flex-direction:column;gap:.7rem;justify-content:center}
-.bigq .q{font-family:var(--display);font-size:3rem;line-height:1;font-weight:600}
-
-.say{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:.2em;text-decoration-color:rgba(127,127,127,.6);border-radius:.25em;transition:background .2s}
-.say:hover{background:rgba(255,200,87,.35)}
-.say.speaking,.tile.speaking{animation:pulse .7s}
-@keyframes pulse{50%{transform:scale(1.04)}}
-
-.btn{font:inherit;font-size:.82rem;font-weight:800;border:0;border-radius:2rem;padding:.42rem 1.05rem;cursor:pointer;background:var(--navy);color:var(--cream);transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
-.dark .btn{background:var(--yellow);color:var(--navy)}
-.btn.ghost{background:transparent;border:2px solid currentColor;color:inherit}
-button:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
-
-/* quiz options */
-.opts{display:flex;gap:.45rem;flex-wrap:wrap}
-.opt{font:inherit;font-size:.88rem;font-weight:800;padding:.25rem .95rem;border-radius:2rem;border:2px solid #9AA7C7;background:transparent;color:inherit;cursor:pointer}
-.opt:hover{border-color:var(--yellow)}
-.opt.right{background:var(--teal);border-color:var(--teal);color:var(--navy)}
-.opt.wrong{background:var(--coral);border-color:var(--coral);color:var(--navy);animation:shake .35s}
-@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.fb{font-size:.78rem;min-height:1.1em;font-weight:700}
-.opt.ans{font-size:.78rem;border-style:dashed}
-.opt.right::before{content:'✓ '}
-.opt.wrong::before{content:'✗ '}
-.q.solved{border-color:var(--teal)!important;box-shadow:inset 0 0 0 1px var(--teal)}
-.q.solved .opt.ans{display:none}
-.q .en-line{color:#5FE0D3;font-weight:700}
-
-/* where-to-click hints + clicked states */
-.hint{align-self:flex-start;display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:800;padding:.22rem .8rem;border-radius:2rem;background:rgba(255,200,87,.22);border:2px dashed var(--yellow);animation:nudge 1.6s ease-in-out infinite}
-.dark .hint{color:var(--yellow)}
-.sun .hint,.lilac .hint{background:rgba(255,253,248,.55);border-color:var(--navy)}
-@keyframes nudge{50%{transform:translateY(-3px)}}
-.btn.shown{background:var(--teal)!important;color:var(--navy)!important;border-color:var(--teal)!important}
-.btn.picked{box-shadow:0 0 0 4px var(--cream), 0 0 0 7px var(--teal)}
-.btn.picked.bad{box-shadow:0 0 0 4px var(--cream), 0 0 0 7px var(--coral)}
-.reveal-box{display:none;flex-direction:column;gap:.35rem;background:rgba(46,196,182,.14);border:2px solid var(--teal);border-radius:.8rem;padding:.7rem 1rem}
-.reveal-box.show{display:flex}
-.reveal-box .en{color:#5FE0D3;font-size:.85rem}
-.tile{position:relative;padding:.6rem 2.7rem .6rem 1rem}
-.tile .de{font-size:.92rem}
-.tile::after{content:'👆';position:absolute;top:.5rem;right:.55rem;width:1.6rem;height:1.6rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;border-radius:50%;background:rgba(22,33,62,.1);color:inherit}
-.dark .tile::after{background:rgba(255,255,255,.14)}
-.tile.open{border-color:var(--teal)!important}
-.tile.open::after{content:'✓';background:var(--teal);color:var(--navy)}
-#sitAns .list{display:flex;flex-wrap:wrap;gap:.3rem 1.4rem}
-.row{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
-.score{font-family:var(--display);font-size:1.2rem;font-weight:600}
-
-/* timer */
-.timer{display:flex;align-items:center;gap:.8rem;background:var(--yellow);color:var(--navy);border-radius:.9rem;padding:.55rem 1.1rem;flex-wrap:wrap}
-.timer .t{font-family:var(--display);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:3.1em}
-.timer .lbl{font-weight:800;flex:1;min-width:10rem}
-.timer .btn{background:var(--navy);color:var(--cream)}
-.timer.done{background:var(--coral);animation:shake .4s 3}
-
-/* tiles */
-.tile{cursor:pointer;user-select:none;transition:transform .2s, background .2s}
-.tile:hover{transform:translateY(-3px)}
-.tile .de{font-weight:800;font-size:1rem}
-.tile .en{font-size:.85rem;opacity:0;max-height:0;overflow:hidden;transition:opacity .25s,max-height .25s}
-.tile.open .en{opacity:1;max-height:3em}
-.tile.open{background:var(--paper)}
-.sun .tile.open{background:#FFF8E6}.lilac .tile.open{background:#F3F0FF}
-
-/* flip game */
-.flip .verdict{display:none;font-weight:800;font-size:.9rem;margin-top:.2rem}
-.flip.open .verdict{display:block}
-.flip.open.good{background:#1F4D58}
-.flip.open.bad{background:#5A2B35}
-.flip .emo{font-size:1.8rem;line-height:1}
-
-/* table */
-.tablewrap{overflow-x:auto;border-radius:.8rem}
-table{border-collapse:collapse;width:100%;font-size:1rem;min-width:34rem}
-th,td{text-align:left;padding:.5rem .8rem}
-th{background:var(--navy);color:var(--cream)}
-tr:nth-child(2) td{background:var(--coralT)}
-tr td{background:var(--paper);border-top:2px solid #EFE7D6}
-
-/* scale */
-.scale{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem}
-.scale .card{transition:opacity .25s, transform .25s}
-.scale .card.dim{opacity:.35}
-.scale .card.on{transform:translateY(-6px);box-shadow:0 .5rem 1.2rem rgba(22,33,62,.15)}
-input[type=range]{width:100%;accent-color:var(--coral);height:2rem;cursor:pointer}
-.gradbar{height:.6rem;border-radius:1rem;background:linear-gradient(90deg,var(--teal),var(--yellow),var(--coral))}
-.face{font-size:2.6rem;line-height:1}
-
-/* stage boxes */
-.stage{background:var(--navy2);border-radius:1rem;padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:.5rem;min-height:9rem;justify-content:center}
-.badge{align-self:flex-start;font-size:.78rem;font-weight:800;padding:.2rem .8rem;border-radius:2rem;color:var(--navy)}
-.big{font-size:1.5rem;font-weight:800;line-height:1.3}
-.blank{display:inline-block;min-width:3.2em;border-bottom:3px solid currentColor;text-align:center;color:var(--yellow)}
-.chip{font-size:.9rem;font-weight:700;padding:.35rem .8rem;border-radius:.6rem}
-
-/* decor */
-.blob{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:1.35rem;color:var(--navy);cursor:pointer;transition:transform .3s}
-.blob:hover{transform:scale(1.08) rotate(-4deg)}
-.decor{position:absolute;right:0;top:0;bottom:0;width:22rem}
-.hero{max-width:31rem;display:flex;flex-direction:column;gap:1.1rem}
-
-/* chrome */
-#prog{position:fixed;left:0;top:0;height:5px;background:var(--yellow);z-index:20;transition:width .35s}
-#bar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;background:rgba(22,33,62,.94);color:var(--cream);padding:5px 8px;border-radius:30px;z-index:20;font:700 14px 'Nunito Sans',Arial,sans-serif;box-shadow:0 4px 18px rgba(0,0,0,.25);transition:opacity .3s}
-#bar button{font:inherit;background:transparent;color:inherit;border:0;padding:7px 11px;border-radius:20px;cursor:pointer}
-#bar button:hover{background:rgba(255,255,255,.12)}
-#count{min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
-@media (hover:hover){#bar{opacity:.35}#bar:hover,#bar:focus-within{opacity:1}}
-#notes{position:fixed;left:16px;right:16px;bottom:64px;max-width:900px;margin:0 auto;max-height:34vh;overflow:auto;background:rgba(22,33,62,.97);color:var(--cream);font:16px/1.5 'Nunito Sans',Arial,sans-serif;padding:14px 18px;border-radius:14px;z-index:19;display:none;border:2px solid var(--yellow)}
-#notes.show{display:block}
-#notes b{color:var(--yellow)}
-#ov{position:fixed;inset:0;background:rgba(22,33,62,.97);z-index:30;display:none;overflow:auto;padding:32px 16px}
-#ov.show{display:block}
-#ov .list{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-#ov button{font:600 16px 'Nunito Sans',Arial,sans-serif;text-align:left;background:var(--navy2);color:var(--cream);border:2px solid transparent;border-radius:12px;padding:14px;cursor:pointer}
-#ov button:hover,#ov button.cur{border-color:var(--yellow)}
-#ov button span{display:block;color:var(--yellow);font-size:13px;margin-bottom:4px}
-#ov h2{color:var(--cream);text-align:center;margin-bottom:20px;font-size:28px}
-.rain{position:fixed;top:-3rem;font-size:2.2rem;z-index:40;pointer-events:none;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
-
-@media (max-width:760px){
-  .slide{padding:1.4rem 1.1rem 5.5rem}
-  .split{grid-template-columns:1fr}
-  .scale{grid-template-columns:1fr 1fr}
-  .decor{display:none}
-  h1{font-size:2.6rem}
-  h2{font-size:1.8rem}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
-</head>
-<body>
-
-<div id="prog"></div>
-<main id="deck">
-
-<!-- 1 COVER -->
-<section class="slide dark" data-notes="Hello everyone! Today we look at two things. First, grammar: the nominative and the accusative case. Second, everyday German: how to say you love something or you don’t like it. You will do three short activities with a partner, so get ready to talk.">
-  <div class="decor" aria-hidden="true">
-    <div class="blob say" data-say="Mega!" style="right:9rem;top:12%;width:9rem;height:9rem;background:var(--yellow)">Mega!</div>
-    <div class="blob say" data-say="den Mann" style="right:1.5rem;top:32%;width:7.5rem;height:7.5rem;background:var(--coral)">den Mann</div>
-    <div class="blob say" data-say="der Mann" style="right:10rem;top:52%;width:8rem;height:8rem;background:var(--teal)">der Mann</div>
-    <div class="blob say" data-say="Mist!" style="right:2rem;top:66%;width:6.5rem;height:6.5rem;background:var(--lilac)">Mist!</div>
-  </div>
-  <div class="wrap">
-    <div class="hero">
-      <span class="eyebrow teal">German for beginners</span>
-      <h1>Nominative,<br>Accusative<br>&amp; <span style="color:var(--yellow)">Slang</span></h1>
-      <p class="muted">Who does what to whom, and how to sound like a real German when you love or hate something.</p>
-      <p class="sm" style="font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)">Fuad Hasan Safat · Hochschule Harz</p>
-    </div>
-  </div>
-</section>
-
-<!-- 2 AGENDA -->
-<section class="slide" data-notes="Quick overview. Part 1 is grammar. Parts 2 and 3 are everyday expressions, one positive and one negative. In between, three short activities with a partner. Show the tip: every dotted German phrase can be clicked to hear it. Tell the class: mistakes are welcome, just try.">
-  <div class="wrap">
-    <span class="eyebrow">Overview</span>
-    <h2>Today’s plan</h2>
-    <div class="grid" style="--min:20rem">
-      <div class="card fill-teal row" style="flex-direction:row"><h2 style="width:2.6rem">1</h2><div><h3>Nominative &amp; Accusative</h3><p class="muted">Who? Whom? What? Plus a quiz.</p></div></div>
-      <div class="card fill-yellow row" style="flex-direction:row"><h2 style="width:2.6rem">2</h2><div><h3>Excitement</h3><p class="muted"><span class="say">Das ist der Hammer!</span> and friends</p></div></div>
-      <div class="card fill-lilac row" style="flex-direction:row"><h2 style="width:2.6rem">3</h2><div><h3>Not happy</h3><p class="muted">From polite to very strong</p></div></div>
-      <div class="card fill-coral row" style="flex-direction:row"><h2 style="width:2.6rem">★</h2><div><h3>Your turn!</h3><p class="muted">Pair activities and games</p></div></div>
-    </div>
-    <div class="callout"><span class="ico">🔊</span><p><b>Tip:</b> click any <span class="say" data-say="Hallo zusammen!">dotted German phrase</span> to hear how it sounds.</p></div>
-  </div>
-</section>
-
-<!-- 3 LANGUAGE IS ALIVE -->
-<section class="slide" data-notes="This is Inga’s idea: language is alive and full of variety. Many expressions are colloquial, but people really use them every day. It always depends on the situation and the person you talk to. Ask the class the question and collect two or three answers.">
-  <div class="wrap">
-    <span class="eyebrow">Before we start</span>
-    <h2>Language is alive</h2>
-    <p class="muted">Many phrases today are slang. Textbooks rarely teach them, but Germans use them every day. What matters is <b>where</b> you are and <b>who</b> you talk to.</p>
-    <div class="grid">
-      <div class="card fill-yellow"><p class="sm muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">With friends</p><h3 class="say">Das ist der Hammer!</h3><p class="muted">“This is awesome!”</p></div>
-      <div class="card fill-teal"><p class="sm muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">Everyday, polite</p><h3 class="say">Das ist nicht mein Ding.</h3><p class="muted">“That’s not my thing.”</p></div>
-      <div class="card fill-lilac"><p class="sm muted" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">With your boss</p><h3 class="say">Sehr beeindruckend.</h3><p class="muted">“Very impressive.”</p></div>
-    </div>
-    <div class="callout"><span class="ico">💬</span><p>Quick question: Do you already know any German slang words?</p></div>
-  </div>
-</section>
-
-<!-- 4 NOMINATIVE -->
-<section class="slide" data-notes="The nominative is the basic form, the one you find in the dictionary. The test question is: Wer? (who) or Was? (what). The subject is always in the nominative, no exceptions. In example 3 the ball comes first, but the subject is still the boy. German word order is flexible, so the article tells you who is doing what.">
-  <div class="wrap">
-    <span class="eyebrow teal">Part 1 · Grammar</span>
-    <h2>Nominative: the doer</h2>
-    <div class="split">
-      <div class="bigq" style="background:var(--teal)"><span class="q say" data-say="Wer? Was?">Wer?<br>Was?</span><p><b>Who? What?</b> The subject: the person or thing doing the action. The verb matches it.</p></div>
-      <div style="display:flex;flex-direction:column;gap:.7rem">
-        <div class="card nom"><p class="say" data-say="Das Pferd ist weiß.">„<span class="n">Das Pferd</span> ist weiß.“</p><p class="sm muted">The horse is white. What is white? The horse.</p></div>
-        <div class="card nom"><p class="say" data-say="Der Mann schenkt der Frau die Blumen.">„<span class="n">Der Mann</span> schenkt der Frau die Blumen.“</p><p class="sm muted">The man gives the woman the flowers. Who gives? The man.</p></div>
-        <div class="card nom"><p class="say" data-say="Den Ball hat der Junge bekommen.">„Den Ball hat <span class="n">der Junge</span> bekommen.“</p><p class="sm muted">The boy got the ball. Careful: the subject is not always first!</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 5 PREDICATIVE -->
-<section class="slide" data-notes="This is called the predicative nominative. The second noun is not the subject, but it describes the subject, so it stays in the nominative. Common mistake: Er ist einen guten Arzt. Correct: ein guter Arzt. The box shows that this only works when sein or werden is the main verb, not a helper for the perfect tense.">
-  <div class="wrap">
-    <span class="eyebrow teal">Part 1 · Grammar</span>
-    <h2>Special case: sein, werden, bleiben</h2>
-    <div class="tags">
-      <span class="eyebrow teal say" data-say="sein" style="font-size:.95rem;text-transform:none;letter-spacing:0">sein · to be</span>
-      <span class="eyebrow teal say" data-say="werden" style="font-size:.95rem;text-transform:none;letter-spacing:0">werden · to become</span>
-      <span class="eyebrow teal say" data-say="bleiben" style="font-size:.95rem;text-transform:none;letter-spacing:0">bleiben · to stay</span>
-    </div>
-    <p class="muted">After these verbs, the second noun is <b>also nominative</b>. Think of it as an equals sign: <b>Jan = my teacher</b>.</p>
-    <div class="split" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
-      <div style="display:flex;flex-direction:column;gap:.7rem">
-        <div class="card nom"><p class="say" data-say="Jan ist mein Lehrer.">„Jan ist <span class="n">mein Lehrer</span>.“</p><p class="sm muted">Jan is my teacher.</p></div>
-        <div class="card nom"><p class="say" data-say="Er wird ein guter Arzt.">„Er wird <span class="n">ein guter Arzt</span>.“</p><p class="sm muted">He is becoming a good doctor.</p></div>
-      </div>
-      <div class="card fill-yellow"><p class="sm" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">⚠️ Watch out</p><p class="say" data-say="Er ist zu dem Mann gegangen.">„Er <b>ist</b> zu dem Mann gegangen.“</p><p class="sm muted">Here “ist” is just a helper for the past tense (he went). This rule does not apply.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 6 ACCUSATIVE -->
-<section class="slide" data-notes="The accusative is used for the direct object, after certain verbs and after certain prepositions. Test question: Wen? (whom) or Was? (what). Good news: most German verbs take the accusative, like haben, sehen, kaufen, spielen, finden. Remember finden, we will need it later for the slang part.">
-  <div class="wrap">
-    <span class="eyebrow coral">Part 1 · Grammar</span>
-    <h2>Accusative: the thing affected</h2>
-    <div class="split">
-      <div class="bigq" style="background:var(--coral)"><span class="q say" data-say="Wen? Was?">Wen?<br>Was?</span><p><b>Whom? What?</b> The direct object: the thing the action happens to. It does nothing itself.</p></div>
-      <div style="display:flex;flex-direction:column;gap:.7rem">
-        <div class="card akk"><p class="say" data-say="Der Mann hat ein Pferd.">„Der Mann hat <span class="a">ein Pferd</span>.“</p><p class="sm muted">The man has a horse. What does he have? A horse.</p></div>
-        <div class="card akk"><p class="say" data-say="Er spielt den Ball.">„Er spielt <span class="a">den Ball</span>.“</p><p class="sm muted">He plays the ball. What does he play? The ball.</p></div>
-        <div class="card akk"><p class="say" data-say="Ich sehe den Hund.">„Ich sehe <span class="a">den Hund</span>.“</p><p class="sm muted">I see the dog. Whom do I see? The dog.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7 ARTICLES -->
-<section class="slide" data-notes="This is the most important grammar slide. Articles change with the case. The good news: you only see a difference with masculine nouns. That’s why it pays to learn every noun with its article: der Hund, die Katze, das Haus. Ask: who spots the change first?">
-  <div class="wrap">
-    <span class="eyebrow coral">Part 1 · Grammar</span>
-    <h2>Only one article changes</h2>
-    <div class="tablewrap">
-    <table>
-      <tr><th>Gender</th><th>Nom. “the”</th><th>Acc. “the”</th><th>Nom. “a”</th><th>Acc. “a”</th></tr>
-      <tr><td><b>Masculine</b></td><td class="say">der Mann</td><td class="say" data-say="den Mann"><span class="a">den</span> Mann</td><td class="say">ein Mann</td><td class="say" data-say="einen Mann"><span class="a">einen</span> Mann</td></tr>
-      <tr><td><b>Feminine</b></td><td class="say">die Frau</td><td class="say">die Frau</td><td class="say">eine Frau</td><td class="say">eine Frau</td></tr>
-      <tr><td><b>Neuter</b></td><td class="say">das Kind</td><td class="say">das Kind</td><td class="say">ein Kind</td><td class="say">ein Kind</td></tr>
-      <tr><td><b>Plural</b></td><td class="say">die Eltern</td><td class="say">die Eltern</td><td>– Eltern</td><td>– Eltern</td></tr>
-    </table>
-    </div>
-    <div class="callout"><span class="ico">💡</span><p><b>Remember:</b> only masculine changes: <b style="color:var(--yellow)">der → den</b> and <b style="color:var(--yellow)">ein → einen</b>. Feminine, neuter and plural stay the same.</p></div>
-  </div>
-</section>
-
-<!-- 8 PREPOSITIONS -->
-<section class="slide" data-notes="Um, durch, ohne, bis, für and gegen always take the accusative. The preposition does not care what the verb would like. If one of these words is in front of the noun, all other rules are switched off. Say the six words out loud together with the class, two times.">
-  <div class="wrap">
-    <span class="eyebrow coral">Part 1 · Grammar</span>
-    <h2>Six words that always want accusative</h2>
-    <p class="muted">After these prepositions it is <b>always</b> accusative. No thinking needed!</p>
-    <div class="grid" style="--min:14rem">
-      <div class="card akk"><h3 class="a">durch · through</h3><p class="say">durch <b>den</b> Tunnel</p></div>
-      <div class="card akk"><h3 class="a">für · for</h3><p class="say">für <b>meinen</b> Bruder</p></div>
-      <div class="card akk"><h3 class="a">um · around</h3><p class="say">um <b>den</b> See</p></div>
-      <div class="card akk"><h3 class="a">ohne · without</h3><p class="say">ohne <b>meinen</b> Laptop</p></div>
-      <div class="card akk"><h3 class="a">bis · until</h3><p class="say">bis <b>nächsten</b> Montag</p></div>
-      <div class="card akk"><h3 class="a">gegen · against</h3><p class="say">gegen <b>den</b> Meister</p></div>
-    </div>
-    <div class="callout"><span class="ico">🎵</span><p>Memory trick: say <span class="say" data-say="durch, für, um, ohne, bis, gegen">„durch, für, um, ohne, bis, gegen“</span> like a little song.</p></div>
-  </div>
-</section>
-
-<!-- 9 ACTIVITY 1 -->
-<section class="slide dark" data-notes="Activity 1. Pairs, three minutes. Start the timer. Pairs discuss each sentence and say the test question. Then click the answers together with the class: let them shout first, then click. Wrong answers shake and can be tried again. Point out number 5 (after sein = nominative) and number 6 (feminine stays die).">
-  <div class="wrap" style="gap:.6rem">
-    <div class="row"><span class="eyebrow coral">Activity 1 · In pairs</span><span class="hint">👆 Click an article to answer · 👁 to show the answer</span><button class="btn ghost" id="q1all" style="margin-left:auto">👁 Show all answers</button></div>
-    <h2>Nominative or accusative?</h2>
-    <div class="grid" id="q1" style="--min:15rem">
-      <div class="card q" data-ans="den" data-why="durch → always accusative." data-en="He drives through the tunnel."><p>„Er fährt durch <span class="blank">___</span> Tunnel.“</p><p class="sm muted hl">der Tunnel · through the tunnel</p><div class="opts"><button class="opt">der</button><button class="opt">den</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-      <div class="card q" data-ans="Der" data-why="Who has? → subject → nominative." data-en="The man has a horse."><p>„<span class="blank">___</span> Mann hat ein Pferd.“</p><p class="sm muted hl">der Mann · who has a horse?</p><div class="opts"><button class="opt">Der</button><button class="opt">Den</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-      <div class="card q" data-ans="den" data-why="What does he play? → accusative." data-en="He plays the ball."><p>„Er spielt <span class="blank">___</span> Ball.“</p><p class="sm muted hl">der Ball · he plays the ball</p><div class="opts"><button class="opt">der</button><button class="opt">den</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-      <div class="card q" data-ans="einen" data-why="haben → accusative: ein → einen." data-en="I have a dog."><p>„Ich habe <span class="blank">___</span> Hund.“</p><p class="sm muted hl">der Hund · I have a dog</p><div class="opts"><button class="opt">ein</button><button class="opt">einen</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-      <div class="card q" data-ans="ein" data-why="After „sein“ → nominative." data-en="Jan is a good teacher."><p>„Jan ist <span class="blank">___</span> guter Lehrer.“</p><p class="sm muted hl">der Lehrer · after „sein“</p><div class="opts"><button class="opt">ein</button><button class="opt">einen</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-      <div class="card q" data-ans="die" data-why="für → acc., feminine stays „die“." data-en="The flowers are for the girlfriend."><p>„Die Blumen sind für <span class="blank">___</span> Freundin.“</p><p class="sm muted hl">die Freundin · for the friend</p><div class="opts"><button class="opt">die</button><button class="opt">den</button><button class="opt ans">👁 Answer</button></div><p class="fb"></p></div>
-    </div>
-    <div class="timer" data-sec="180"><span class="t">3:00</span><span class="lbl">Pairs: Wer? Wen? Was?</span><span class="score">Score: <span id="q1score">0</span>/6</span><button class="btn ghost" id="q1reset" title="Reset answers">↺ Answers</button><button class="btn go">▶ Start</button><button class="btn ghost rs" title="Reset timer">↺</button></div>
-  </div>
-</section>
-
-<!-- 10 EXCITEMENT -->
-<section class="slide sun" data-notes="Part 2: how to show you are excited about something. These ten phrases come from the handout. Click each card: it says the phrase and shows the English. Let the class repeat after the computer, with energy! The handout says use depends on region, age and social group, and some phrases like Geil can be inappropriate in certain situations.">
-  <div class="wrap">
-    <div class="row"><span class="eyebrow navy">Part 2 · Showing feelings</span><span class="hint">👆 Click a card to hear it + see the meaning</span><button class="btn" data-openall style="margin-left:auto">👁 Show all meanings</button></div>
-    <h2>When you love something 😍</h2>
-    <div class="grid" style="--min:13rem">
-      <div class="card tile" data-say="Das ist der Hammer!"><span class="de">Das ist der Hammer!</span><span class="en">This is awesome!</span></div>
-      <div class="card tile" data-say="Mega!"><span class="de">Mega!</span><span class="en">Amazing!</span></div>
-      <div class="card tile" data-say="Voll krass!"><span class="de">Voll krass!</span><span class="en">Totally rad!</span></div>
-      <div class="card tile" data-say="Echt cool!"><span class="de">Echt cool!</span><span class="en">Really cool!</span></div>
-      <div class="card tile" data-say="Der Wahnsinn!"><span class="de">Der Wahnsinn!</span><span class="en">The madness! (= incredible)</span></div>
-      <div class="card tile" data-say="Bombe!"><span class="de">Bombe!</span><span class="en">Bombshell!</span></div>
-      <div class="card tile" data-say="Spitze!"><span class="de">Spitze!</span><span class="en">Great!</span></div>
-      <div class="card tile" data-say="Das rockt!"><span class="de">Das rockt!</span><span class="en">That rocks!</span></div>
-      <div class="card tile" data-say="Fantastisch!"><span class="de">Fantastisch!</span><span class="en">Fantastic!</span></div>
-      <div class="card tile" data-say="Geil!"><span class="de">Geil! ⚠️</span><span class="en">Cool! (careful: not everywhere)</span></div>
-    </div>
-    <p class="muted">Then repeat it with feeling! 🎉</p>
-  </div>
-</section>
-
-<!-- 11 REGISTER -->
-<section class="slide" data-notes="The handout says Mega and Das ist der Hammer are very informal and not right for formal or serious situations. There it suggests sehr gut, exzellent or beeindruckend. For Voll krass it suggests sehr beeindruckend, außerordentlich or bemerkenswert. Play the mini quiz with the whole class: they shout Friends or Formal, then you click.">
-  <div class="wrap">
-    <span class="eyebrow">Part 2 · Showing feelings</span>
-    <h2>Know your audience</h2>
-    <div class="grid" style="--min:18rem">
-      <div class="card fill-yellow"><p class="sm" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">👫 Friends, informal</p><p style="font-weight:800"><span class="say">Mega!</span> · <span class="say">Voll krass!</span> · <span class="say">Das ist der Hammer!</span></p><p class="sm muted">„Du hast die Prüfung bestanden? Mega!“ · You passed? Amazing!</p></div>
-      <div class="card fill-lilac"><p class="sm" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">🎓 Formal, serious</p><p style="font-weight:800"><span class="say">sehr gut</span> · <span class="say">exzellent</span> · <span class="say">sehr beeindruckend</span> · <span class="say">bemerkenswert</span></p><p class="sm muted">very good · excellent · very impressive · remarkable</p></div>
-    </div>
-    <div class="card" style="background:var(--navy);color:var(--cream);border-color:transparent;gap:.6rem" id="reg">
-      <div class="row"><p class="sm" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--yellow)">Mini quiz · Whole class: friends or formal?</p><span class="hint" style="color:var(--yellow)">👆 Click Friends or Formal</span></div>
-      <div class="row" style="justify-content:space-between"><span class="big say" id="regWord">Mega!</span><span class="score" style="color:var(--yellow)"><span id="regScore">0</span> ✓</span></div>
-      <div class="row"><button class="btn" style="background:var(--yellow);color:var(--navy)" data-reg="inf">👫 Friends</button><button class="btn" style="background:var(--lilac);color:var(--navy)" data-reg="for">🎓 Formal</button><button class="btn ghost" id="regShow">👁 Show answer</button><button class="btn ghost" id="regNext" style="margin-left:auto">Next ➜</button></div>
-      <p class="fb" id="regFb" style="font-size:.9rem"></p>
-    </div>
-  </div>
-</section>
-
-<!-- 12 ACTIVITY 2 -->
-<section class="slide dark" data-notes="Activity 2, about three minutes. Click Casual situation or Formal situation. Do some of each, so the class practises both styles. Person A reads the German, person B reacts with a phrase that fits the audience shown on the badge. Then switch roles and click again. Ask two pairs to perform. For the formal badge ask: Mega, or better sehr beeindruckend?">
-  <div class="wrap" style="gap:.6rem">
-    <div class="row"><span class="eyebrow">Activity 2 · In pairs</span><span class="hint">👆 Click 🎲 Casual or 🎲 Formal · 👁 for good answers</span></div>
-    <h2>React like a German! 🎭</h2>
-    <p class="muted">Person A reads the news. Person B reacts with the right phrase for the person on the badge. Then switch!</p>
-    <div class="stage" id="sit">
-      <span class="badge" id="sitBadge" style="background:var(--yellow)">👫 You are talking to a friend</span>
-      <span class="big say" id="sitDe">„Ich habe die Prüfung bestanden!“</span>
-      <span class="muted" id="sitEn">🇬🇧 I passed the exam!</span>
-      <div class="reveal-box" id="sitAns"></div>
-    </div>
-    <div class="row"><button class="btn" id="sitNext">🎲 Casual situation</button><button class="btn" id="sitFormal" style="background:var(--lilac);color:var(--navy)">🎲 Formal situation</button><button class="btn ghost" id="sitShow">👁 Show good answers</button></div>
-    <div class="timer" data-sec="180"><span class="t">3:00</span><span class="lbl">React, then switch roles</span><button class="btn go">▶ Start</button><button class="btn ghost rs">↺</button></div>
-  </div>
-</section>
-
-<!-- 13 NOT HAPPY -->
-<section class="slide lilac" data-notes="Part 3: showing that you don’t like something. These ten phrases are from the second handout. The handout warns: be careful with the situation and the person, so you don’t seem rude or cause misunderstandings. Click and repeat, this time with an annoyed face.">
-  <div class="wrap">
-    <div class="row"><span class="eyebrow navy">Part 3 · Showing feelings</span><span class="hint">👆 Click a card to hear it + see the meaning</span><button class="btn" data-openall style="margin-left:auto">👁 Show all meanings</button></div>
-    <h2>When you don’t like something 😒</h2>
-    <div class="grid" style="--min:15rem">
-      <div class="card tile" data-say="Das ist nicht mein Ding."><span class="de">Das ist nicht mein Ding.</span><span class="en">That’s not my thing.</span></div>
-      <div class="card tile" data-say="Das ist Mist."><span class="de">Das ist Mist.</span><span class="en">This is crap.</span></div>
-      <div class="card tile" data-say="Finde ich gar nicht cool."><span class="de">Finde ich gar nicht cool.</span><span class="en">I don’t think it’s cool at all.</span></div>
-      <div class="card tile" data-say="Das ist ’ne Katastrophe."><span class="de">Das ist ’ne Katastrophe.</span><span class="en">This is a disaster.</span></div>
-      <div class="card tile" data-say="Das ist Käse."><span class="de">Das ist Käse.</span><span class="en">“This is cheese.” = nonsense</span></div>
-      <div class="card tile" data-say="Das taugt nichts."><span class="de">Das taugt nichts.</span><span class="en">That’s no good.</span></div>
-      <div class="card tile" data-say="Das ist unter aller Kanone."><span class="de">Das ist unter aller Kanone.</span><span class="en">This is really awful.</span></div>
-      <div class="card tile" data-say="Das ist nicht der Brüller."><span class="de">Das ist nicht der Brüller.</span><span class="en">That’s not great.</span></div>
-      <div class="card tile" data-say="Damit kann ich nichts anfangen."><span class="de">Damit kann ich nichts anfangen.</span><span class="en">I can’t do anything with that.</span></div>
-      <div class="card tile" data-say="Das ist zum Vergessen."><span class="de">Das ist zum Vergessen.</span><span class="en">This is forgettable.</span></div>
-    </div>
-    <p class="sm muted">⚠️ Say it with an annoyed face, but think about who you talk to, so you don’t sound rude.</p>
-  </div>
-</section>
-
-<!-- 14 SCALE -->
-<section class="slide" data-notes="Examples are from the handout. The handout says: Das ist nicht mein Ding is polite and non-binding, it does not sound negative. Finde ich gar nicht cool is relaxed, informal and youthful. Das ist Mist can sound a bit crass, so be careful in formal situations. Move the slider slowly from left to right. The order on the scale is my own guide, not a fixed rule. Ask: where would you put Das ist Käse?">
-  <div class="wrap">
-    <div class="row"><span class="eyebrow lilac">Part 3 · Showing feelings</span><span class="hint">👆 Drag the slider or click a card</span></div>
-    <div class="row" style="justify-content:space-between"><h2>How strong is it?</h2><span class="face" id="face">🙂</span></div>
-    <div class="gradbar"></div>
-    <input type="range" min="1" max="4" step="1" value="1" id="sc" aria-label="Strength from polite to very strong">
-    <div class="scale" id="scale">
-      <div class="card fill-teal"><p class="sm" style="font-weight:800;text-transform:uppercase">1 · Polite</p><h3 class="say">Das ist nicht mein Ding.</h3><p class="sm muted say" data-say="Scharfes Essen? Nein, danke, das ist nicht mein Ding.">„Scharfes Essen? Nein, danke, das ist nicht mein Ding.“</p><p class="sm muted">🇬🇧 Spicy food? No thanks, that’s not my thing.</p></div>
-      <div class="card fill-yellow"><p class="sm" style="font-weight:800;text-transform:uppercase">2 · Casual</p><h3 class="say">Finde ich gar nicht cool.</h3><p class="sm muted say" data-say="Die Absage des Konzerts? Das finde ich gar nicht cool.">„Die Absage des Konzerts? Das finde ich gar nicht cool.“</p><p class="sm muted">🇬🇧 The concert was cancelled? I don’t think that’s cool at all.</p></div>
-      <div class="card" style="background:#FFE29B;border-color:transparent"><p class="sm" style="font-weight:800;text-transform:uppercase">3 · Rude-ish</p><h3 class="say">Das ist Mist!</h3><p class="sm muted say" data-say="Das Gerät funktioniert nicht. Das ist Mist!">„Das Gerät funktioniert nicht. Das ist Mist!“</p><p class="sm muted">🇬🇧 The device doesn’t work. This is crap!</p></div>
-      <div class="card fill-coral"><p class="sm" style="font-weight:800;text-transform:uppercase">4 · Very strong</p><h3 class="say">Das ist ’ne Katastrophe!</h3><p class="sm muted say" data-say="Mit dem ersten bin ich zufrieden, das zweite ist ’ne Katastrophe.">„Mit dem ersten bin ich zufrieden, das zweite ist ’ne Katastrophe.“</p><p class="sm muted">🇬🇧 I’m happy with the first one, the second one is a disaster.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 15 LITERAL GAME -->
-<section class="slide dark" data-notes="Quick whole-class game. Read each literal translation and let the class shout good or bad. Then click the card to reveal the real meaning. The point: slang often makes no sense word for word, you have to learn the meaning.">
-  <div class="wrap">
-    <div class="row"><span class="eyebrow lilac">Quick game · Whole class</span><span class="hint">👆 Click a card to see the answer</span><button class="btn ghost" data-openall data-label="👁 Show all answers" style="margin-left:auto">👁 Show all answers</button></div>
-    <h2>Word for word, it’s funny 😄</h2>
-    <p class="muted">Read the literal translation. Shout: <b>good</b> or <b>bad</b>? Then click to check.</p>
-    <div class="grid" style="--min:16rem">
-      <div class="card tile flip bad" data-say="Das ist Käse."><span class="emo">🧀</span><span class="de">Das ist Käse.</span><span class="sm muted">“This is cheese.”</span><span class="verdict">👎 BAD: it means “nonsense”</span></div>
-      <div class="card tile flip good" data-say="Das ist der Hammer!"><span class="emo">🔨</span><span class="de">Das ist der Hammer!</span><span class="sm muted">“This is the hammer!”</span><span class="verdict">👍 GOOD: it means “awesome”</span></div>
-      <div class="card tile flip good" data-say="Bombe!"><span class="emo">💣</span><span class="de">Bombe!</span><span class="sm muted">“Bomb!”</span><span class="verdict">👍 GOOD: it means “brilliant”</span></div>
-      <div class="card tile flip bad" data-say="Das ist nicht der Brüller."><span class="emo">📢</span><span class="de">Das ist nicht der Brüller.</span><span class="sm muted">“That’s not the screamer.”</span><span class="verdict">👎 BAD: it means “not great”</span></div>
-      <div class="card tile flip bad" data-say="Das ist unter aller Kanone."><span class="emo">💥</span><span class="de">Das ist unter aller Kanone.</span><span class="sm muted">“That’s below all cannons.”</span><span class="verdict">👎 BAD: it means “really awful”</span></div>
-      <div class="card tile flip good" data-say="Der Wahnsinn!"><span class="emo">🤯</span><span class="de">Der Wahnsinn!</span><span class="sm muted">“The madness!”</span><span class="verdict">👍 GOOD: it means “incredible”</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- 16 ACTIVITY 3 -->
-<section class="slide" data-notes="Final activity, about four minutes. It combines both parts. Click Spin. Person A asks the question, person B answers in the mood shown. Then click Show answer. Look at the two answers: finden takes the accusative (den Kaffee), but sein keeps the nominative (der Kaffee). Feminine and neuter don’t change. Spin a few times with the class first, then let pairs continue on their own.">
-  <div class="wrap">
-    <div class="row"><span class="eyebrow coral">Activity 3 · In pairs · Grammar + Slang</span><span class="hint">👆 Click 🎲 Spin, answer, then 👁 Show answer</span></div>
-    <h2>Love it or hate it? 🎲</h2>
-    <div class="split" style="grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)">
-      <div class="card" style="background:var(--navy);color:var(--cream);border-color:transparent;gap:.45rem">
-        <p class="sm" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--yellow)">The pattern</p>
-        <p class="say" data-say="Wie findest du den Film?">A: „Wie findest du <b style="color:#FF9A8A">den</b> Film?“</p>
-        <p class="sm" style="color:#C9D3EA">How do you like the film?</p>
-        <p class="say" data-say="Ich finde den Film mega!">B: „Ich finde <b style="color:#FF9A8A">den</b> Film mega!“</p>
-        <p class="say" data-say="Der Film ist nicht mein Ding.">or „<b style="color:#5FE0D3">Der</b> Film ist nicht mein Ding.“</p>
-        <p class="sm" style="color:#C9D3EA"><b>finden</b> → accusative · <b>sein</b> → nominative</p>
-      </div>
-      <div class="stage" style="color:var(--cream)">
-        <div class="row" style="justify-content:space-between"><span class="badge" id="spMood" style="background:var(--yellow)">😍 Love it</span><span class="sm" id="spEn" style="color:#C9D3EA">coffee</span></div>
-        <span class="big">A: „Wie findest du <span class="blank" id="spArt">___</span> <span id="spNoun">Kaffee</span>?“</span>
-        <div class="reveal-box" id="spAns">
-          <span class="say" id="spA1"></span>
-          <span class="en" id="spA1en"></span>
-          <span class="say" id="spA2"></span>
-          <span class="en" id="spA2en"></span>
-        </div>
-        <div class="row"><button class="btn" id="spGo">🎲 Spin</button><button class="btn ghost" id="spShow">👁 Show answer</button></div>
-      </div>
-    </div>
-    <div class="timer" data-sec="240"><span class="t">4:00</span><span class="lbl">Spin, ask, answer, switch!</span><button class="btn go">▶ Start</button><button class="btn ghost rs">↺</button></div>
-  </div>
-</section>
-
-<!-- 17 SUMMARY -->
-<section class="slide" data-notes="Short summary. One: use the question test, Wer for nominative, Wen for accusative. Two: only masculine articles change in the accusative. Three: slang is alive and useful, but always think about where you are and who you talk to.">
-  <div class="wrap">
-    <span class="eyebrow">Summary</span>
-    <h2>Three things to take home</h2>
-    <div class="grid">
-      <div class="card fill-teal" style="padding:1.3rem"><h1 class="n" style="font-size:2.6rem">1</h1><h3>Ask the question</h3><p class="muted"><span class="say">Wer?</span> = nominative.<br><span class="say">Wen?</span> = accusative.</p></div>
-      <div class="card fill-coral" style="padding:1.3rem"><h1 class="a" style="font-size:2.6rem">2</h1><h3>Watch masculine</h3><p class="muted">der → den, ein → einen. Everything else stays.</p></div>
-      <div class="card fill-yellow" style="padding:1.3rem"><h1 style="font-size:2.6rem;color:#7A5A00">3</h1><h3>Slang needs context</h3><p class="muted"><span class="say">„Mega!“</span> with friends, <span class="say">„sehr gut“</span> with your professor.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 18 THANKS -->
-<section class="slide dark" data-notes="Thank everyone. Ask for questions. As a funny last challenge, ask one or two people to rate the presentation in German, for example: Ich finde die Präsentation mega! Then click the matching button. Small grammar check: Präsentation is feminine, so it stays die.">
-  <div class="decor" aria-hidden="true">
-    <div class="blob say" data-say="Spitze!" style="right:7rem;top:18%;width:9rem;height:9rem;background:var(--yellow)">Spitze!</div>
-    <div class="blob say" data-say="Fragen?" style="right:1.5rem;top:52%;width:8rem;height:8rem;background:var(--teal)">Fragen?</div>
-  </div>
-  <div class="wrap">
-    <div class="hero">
-      <h1 class="say" data-say="Danke schön!" style="font-size:3.8rem">Danke<br>schön!</h1>
-      <p style="font-size:1.35rem;color:var(--yellow);font-weight:700">Thank you! Any questions?</p>
-      <p class="muted">Last challenge: tell me in German what you thought of this presentation.</p>
-      <p class="muted say" data-say="Ich finde die Präsentation mega!">„Ich finde <b>die</b> Präsentation …“</p>
-      <div class="row"><button class="btn" id="rateGood">😍 Mega!</button><button class="btn ghost" id="rateBad">😒 Mist!</button></div>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<nav id="bar" aria-label="Presentation controls">
-  <button id="prev" title="Previous (←)">◀</button>
-  <span id="count">1 / 18</span>
-  <button id="next" title="Next (→)">▶</button>
-  <button id="bNotes" title="Speaker notes (N)">📝 Notes</button>
-  <button id="bOv" title="All slides (O)">▦</button>
-  <button id="bFs" title="Fullscreen (F)">⛶</button>
-</nav>
-<div id="notes" role="region" aria-label="Speaker notes"></div>
-<div id="ov"><h2>All slides</h2><div class="list"></div></div>
-
-<script>
-(() => {
-  const slides = [...document.querySelectorAll('.slide')];
-  const count = document.getElementById('count');
-  const prog = document.getElementById('prog');
-  const notes = document.getElementById('notes');
-  const ov = document.getElementById('ov');
-  let cur = 0;
-
-  /* ---------- speech ---------- */
-  const synth = window.speechSynthesis;
-  function speak(text, el) {
-    if (!synth) return;
-    try {
-      synth.cancel();
-      const u = new SpeechSynthesisUtterance(text.replace(/[„“”"…]/g, '').trim());
-      u.lang = 'de-DE'; u.rate = 0.9;
-      const v = synth.getVoices().find(v => /^de/i.test(v.lang));
-      if (v) u.voice = v;
-      synth.speak(u);
-    } catch (e) {}
-    if (el) { el.classList.remove('speaking'); void el.offsetWidth; el.classList.add('speaking'); }
-  }
-  if (synth) synth.getVoices();
-  document.addEventListener('click', e => {
-    const s = e.target.closest('[data-say], .say');
-    if (!s || e.target.closest('button')) return;
-    speak(s.dataset.say || s.textContent, s);
-  });
-
-  /* ---------- navigation ---------- */
-  function title(s) { const h = s.querySelector('h1, h2'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
-  function go(n, dir) {
-    n = Math.max(0, Math.min(slides.length - 1, n));
-    if (n === cur && slides[cur].classList.contains('active')) return;
-    const back = dir === undefined ? n < cur : dir < 0;
-    slides[cur].classList.remove('active', 'back');
-    cur = n;
-    const s = slides[cur];
-    s.classList.toggle('back', back);
-    s.classList.add('active');
-    s.scrollTop = 0;
-    count.textContent = (cur + 1) + ' / ' + slides.length;
-    prog.style.width = ((cur + 1) / slides.length * 100) + '%';
-    notes.innerHTML = '<b>Slide ' + (cur + 1) + ' · ' + title(s) + '</b><br>' + (s.dataset.notes || '');
-    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (e) {}
-    if (synth) synth.cancel();
-  }
-  const next = () => go(cur + 1, 1), prev = () => go(cur - 1, -1);
-  document.getElementById('next').onclick = next;
-  document.getElementById('prev').onclick = prev;
-  document.getElementById('bNotes').onclick = () => notes.classList.toggle('show');
-  const fs = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.(); };
-  document.getElementById('bFs').onclick = fs;
-
-  const list = ov.querySelector('.list');
-  slides.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.innerHTML = '<span>' + (i + 1) + '</span>' + title(s);
-    b.onclick = () => { go(i); ov.classList.remove('show'); };
-    list.appendChild(b);
-  });
-  const toggleOv = () => {
-    ov.classList.toggle('show');
-    [...list.children].forEach((b, i) => b.classList.toggle('cur', i === cur));
-  };
-  document.getElementById('bOv').onclick = toggleOv;
-
-  document.addEventListener('keydown', e => {
-    if (e.target.matches('input')) return;
-    const onBtn = e.target.closest('button');
-    const k = e.key;
-    if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && !onBtn)) { e.preventDefault(); next(); }
-    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
-    else if (k === 'Home') go(0);
-    else if (k === 'End') go(slides.length - 1);
-    else if (k === 'n' || k === 'N') notes.classList.toggle('show');
-    else if (k === 'o' || k === 'O') toggleOv();
-    else if (k === 'f' || k === 'F') fs();
-    else if (k === 'Escape') ov.classList.remove('show');
-  });
-
-  let tx = null, ty = 0;
-  document.addEventListener('touchstart', e => {
-    if (e.target.closest('input')) { tx = null; return; }
-    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
-  }, { passive: true });
-  document.addEventListener('touchend', e => {
-    if (tx === null) return;
-    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) dx < 0 ? next() : prev();
-    tx = null;
-  }, { passive: true });
-
-  /* ---------- timers ---------- */
-  document.querySelectorAll('.timer').forEach(t => {
-    const total = +t.dataset.sec, out = t.querySelector('.t'), goB = t.querySelector('.go');
-    let left = total, id = null;
-    const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-    const stop = () => { clearInterval(id); id = null; };
-    goB.onclick = () => {
-      if (id) { stop(); goB.textContent = '▶ Start'; return; }
-      if (left <= 0) left = total;
-      t.classList.remove('done');
-      goB.textContent = '❚❚ Pause';
-      id = setInterval(() => {
-        left--; out.textContent = fmt(left);
-        if (left <= 0) { stop(); goB.textContent = '▶ Start'; out.textContent = 'Zeit!'; t.classList.add('done'); speak('Die Zeit ist um!'); }
-      }, 1000);
-    };
-    t.querySelector('.rs').onclick = () => { stop(); left = total; out.textContent = fmt(total); goB.textContent = '▶ Start'; t.classList.remove('done'); };
-  });
-
-  /* ---------- activity 1 quiz ---------- */
-  const q1 = document.getElementById('q1'), q1s = document.getElementById('q1score');
-  let q1score = 0;
-  const solveQ = (q, byButton) => {
-    if (q.dataset.done) return;
-    q.dataset.done = 1; q.classList.add('solved');
-    q.querySelectorAll('.opt:not(.ans)').forEach(o => { if (o.textContent === q.dataset.ans) { o.classList.remove('wrong'); o.classList.add('right'); } });
-    q.querySelector('.blank').textContent = q.dataset.ans;
-    q.querySelector('.fb').textContent = (byButton ? '👁 ' : '✓ Richtig! ') + q.dataset.why;
-    const hl = q.querySelector('.hl'); hl.dataset.orig = hl.dataset.orig || hl.textContent;
-    hl.textContent = '🇬🇧 ' + q.dataset.en; hl.classList.add('en-line');
-    if (!byButton) q1s.textContent = ++q1score;
-    speak(q.querySelector('p').textContent.replace('___', q.dataset.ans));
-  };
-  q1.querySelectorAll('.q').forEach(q => {
-    const fb = q.querySelector('.fb');
-    q.querySelectorAll('.opt').forEach(b => b.onclick = () => {
-      if (q.dataset.done) return;
-      if (b.classList.contains('ans')) return solveQ(q, true);
-      if (b.textContent === q.dataset.ans) solveQ(q, false);
-      else {
-        b.classList.remove('wrong'); void b.offsetWidth; b.classList.add('wrong');
-        fb.textContent = '✗ Not quite. Ask: Wer? or Wen? Try again.';
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nominative, Accusative &amp; Slang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Nunito+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #16213e;
+        --navy2: #24325a;
+        --cream: #fbf6ec;
+        --paper: #fffdf8;
+        --yellow: #ffc857;
+        --coral: #ff6f59;
+        --teal: #2ec4b6;
+        --lilac: #a99bff;
+        --tealT: #d5f3ef;
+        --coralT: #ffdcd5;
+        --yellowT: #ffefc4;
+        --lilacT: #e4deff;
+        --muted: #4a5568;
+        --tealD: #0b7a70;
+        --coralD: #c2401f;
+        --display: "Fredoka", "Trebuchet MS", sans-serif;
       }
-    });
-  });
-  const q1all = document.getElementById('q1all');
-  q1all.onclick = () => { q1.querySelectorAll('.q').forEach(q => solveQ(q, true)); q1all.classList.add('shown'); q1all.textContent = '✓ All answers shown'; };
-  document.getElementById('q1reset').onclick = () => {
-    q1score = 0; q1s.textContent = 0;
-    q1all.classList.remove('shown'); q1all.textContent = '👁 Show all answers';
-    q1.querySelectorAll('.q').forEach(q => {
-      delete q.dataset.done; q.classList.remove('solved');
-      q.querySelector('.fb').textContent = ''; q.querySelector('.blank').textContent = '___';
-      const hl = q.querySelector('.hl'); if (hl.dataset.orig) hl.textContent = hl.dataset.orig; hl.classList.remove('en-line');
-      q.querySelectorAll('.opt').forEach(b => b.classList.remove('right', 'wrong'));
-    });
-  };
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        font-size: clamp(15px, min(1.62vw, 2.95vh), 34px);
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--navy);
+        font-family: "Nunito Sans", Arial, sans-serif;
+        color: var(--navy);
+        overflow: hidden;
+      }
 
-  /* ---------- tiles ---------- */
-  document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => t.classList.add('open')));
-  document.querySelectorAll('[data-openall]').forEach(b => b.onclick = () => {
-    const tiles = b.closest('.slide').querySelectorAll('.tile');
-    const allOpen = [...tiles].every(t => t.classList.contains('open'));
-    tiles.forEach(t => t.classList.toggle('open', !allOpen));
-    b.classList.toggle('shown', !allOpen);
-    b.textContent = allOpen ? (b.dataset.label || '👁 Show all meanings') : '✓ Shown · click to hide';
-  });
+      /* ---------- slides ---------- */
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+        overflow-y: auto;
+        background: var(--cream);
+        color: var(--navy);
+        padding: 2rem 4rem 4.2rem;
+      }
+      .slide.active {
+        display: block;
+        animation: in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .slide.back.active {
+        animation: inBack 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateX(2rem);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes inBack {
+        from {
+          opacity: 0;
+          transform: translateX(-2rem);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .wrap {
+        position: relative;
+        max-width: 54rem;
+        margin: 0 auto;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .dark {
+        background: var(--navy);
+        color: var(--cream);
+      }
+      .sun {
+        background: var(--yellow);
+      }
+      .lilac {
+        background: var(--lilac);
+      }
 
-  /* ---------- register quiz ---------- */
-  const regItems = [
-    ['Mega!', 'inf', 'Amazing!'], ['sehr beeindruckend', 'for', 'very impressive'], ['Voll krass!', 'inf', 'Totally rad!'], ['exzellent', 'for', 'excellent'],
-    ['Das ist der Hammer!', 'inf', 'This is awesome!'], ['bemerkenswert', 'for', 'remarkable'], ['Geil!', 'inf', 'Cool! (careful, not everywhere)'],
-    ['sehr gut', 'for', 'very good'], ['Das rockt!', 'inf', 'That rocks!'], ['außerordentlich', 'for', 'extraordinary']
-  ];
-  const regLabel = { inf: '👫 Friends (informal)', for: '🎓 Formal' };
-  let ri = 0, rScore = 0, rDone = false;
-  const rW = document.getElementById('regWord'), rFb = document.getElementById('regFb'), rS = document.getElementById('regScore'), rShow = document.getElementById('regShow');
-  const regBtns = [...document.querySelectorAll('[data-reg]')];
-  const showReg = () => {
-    rW.textContent = regItems[ri][0]; rFb.textContent = ''; rDone = false;
-    regBtns.forEach(b => { b.classList.remove('picked', 'bad'); b.textContent = b.dataset.reg === 'inf' ? '👫 Friends' : '🎓 Formal'; });
-    rShow.classList.remove('shown'); rShow.textContent = '👁 Show answer';
-  };
-  const regAnswer = (prefix) => {
-    const [w, k, en] = regItems[ri];
-    rFb.textContent = prefix + regLabel[k] + ' · „' + w + '“ = ' + en;
-    regBtns.forEach(b => { if (b.dataset.reg === k) { b.classList.remove('bad'); b.classList.add('picked'); if (!b.textContent.startsWith('✓')) b.textContent = '✓ ' + b.textContent; } });
-    rDone = true;
-  };
-  regBtns.forEach(b => b.onclick = () => {
-    if (rDone) return;
-    if (b.dataset.reg === regItems[ri][1]) { rS.textContent = ++rScore; rFb.style.color = 'var(--teal)'; regAnswer('✓ Richtig! '); }
-    else { b.classList.add('picked', 'bad'); if (!b.textContent.startsWith('✗')) b.textContent = '✗ ' + b.textContent; rFb.textContent = '✗ Not this one. Try the other button.'; rFb.style.color = '#FF9A8A'; }
-  });
-  rShow.onclick = () => { rFb.style.color = '#5FE0D3'; regAnswer('👁 Answer: '); rShow.classList.add('shown'); rShow.textContent = '✓ Answer shown'; speak(regItems[ri][0]); };
-  document.getElementById('regNext').onclick = () => { ri = (ri + 1) % regItems.length; showReg(); };
+      .eyebrow {
+        align-self: flex-start;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.28rem 0.95rem;
+        border-radius: 2rem;
+        background: var(--yellow);
+        color: var(--navy);
+      }
+      .eyebrow.teal {
+        background: var(--teal);
+      }
+      .eyebrow.coral {
+        background: var(--coral);
+      }
+      .eyebrow.lilac {
+        background: var(--lilac);
+      }
+      .eyebrow.navy {
+        background: var(--navy);
+        color: var(--cream);
+      }
+      .tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
 
-  /* ---------- activity 2 situations ---------- */
-  const who = {
-    f: ['👫 You are talking to a friend', 'var(--yellow)'],
-    c: ['🎒 You are talking to a classmate', 'var(--teal)'],
-    b: ['💼 You are talking to your boss', 'var(--lilac)'],
-    p: ['🎓 You are talking to your professor', 'var(--lilac)'],
-    k: ['🤝 You are talking to a customer', 'var(--lilac)'],
-    m: ['👔 You are in a work meeting', 'var(--lilac)']
-  };
-  const FORMAL = 'bpkm';
-  const sits = [
-    ['Ich habe die Prüfung bestanden!', 'I passed the exam!', 'f'],
-    ['Ich habe Tickets für das Konzert!', 'I have tickets for the concert!', 'f'],
-    ['Mein Handy hält eine Woche!', 'My phone battery lasts a week!', 'c'],
-    ['Ich habe die Stelle bekommen!', 'I got the job!', 'f'],
-    ['Ich habe in drei Monaten Spanisch gelernt.', 'I learned Spanish in three months.', 'c'],
-    ['Die Aussicht vom Berg ist toll!', 'The view from the mountain is great!', 'f'],
-    ['Wir haben den Auftrag bekommen.', 'We won the contract.', 'b'],
-    ['Hier ist mein neues Konzept für das Projekt.', 'Here is my new concept for the project.', 'b'],
-    ['Ihr Team hat den ersten Platz gewonnen.', 'Your team won first place.', 'p'],
-    ['Hier sind die Ergebnisse unserer Studie.', 'Here are the results of our study.', 'p'],
-    ['Wir möchten Ihr Produkt kaufen.', 'We would like to buy your product.', 'k'],
-    ['Der Umsatz ist um 20 Prozent gestiegen.', 'Sales went up by 20 percent.', 'm']
-  ];
-  const goodAns = {
-    casual: [['Mega!', 'Amazing!'], ['Das ist der Hammer!', 'This is awesome!'], ['Echt cool!', 'Really cool!'], ['Der Wahnsinn!', 'Incredible!']],
-    formal: [['Sehr beeindruckend!', 'Very impressive!'], ['Exzellent!', 'Excellent!'], ['Sehr gut!', 'Very good!'], ['Bemerkenswert!', 'Remarkable!'], ['Außerordentlich!', 'Extraordinary!']]
-  };
-  let si = 0;
-  const sB = document.getElementById('sitBadge'), sDe = document.getElementById('sitDe'), sEn = document.getElementById('sitEn'),
-        sAns = document.getElementById('sitAns'), sShow = document.getElementById('sitShow');
-  const hideSit = () => { sAns.classList.remove('show'); sShow.classList.remove('shown'); sShow.textContent = '👁 Show good answers'; };
-  const nextSit = (formal) => {
-    let n; do { n = Math.floor(Math.random() * sits.length); } while (n === si || FORMAL.includes(sits[n][2]) !== formal);
-    si = n; const [de, en, w] = sits[si];
-    sDe.textContent = '„' + de + '“'; sEn.textContent = '🇬🇧 ' + en;
-    sB.textContent = who[w][0]; sB.style.background = who[w][1];
-    hideSit();
-  };
-  document.getElementById('sitNext').onclick = () => nextSit(false);
-  document.getElementById('sitFormal').onclick = () => nextSit(true);
-  sShow.onclick = () => {
-    if (sAns.classList.contains('show')) return hideSit();
-    const formal = FORMAL.includes(sits[si][2]);
-    sAns.innerHTML = '<span class="sm" style="font-weight:800">' + (formal ? '🎓 Formal is better here:' : '👫 Casual is fine here:') + '</span><div class="list">' +
-      goodAns[formal ? 'formal' : 'casual'].map(([d, e]) => '<span><b class="say">„' + d + '“</b> <span class="en">= ' + e + '</span></span>').join('') + '</div>';
-    sAns.classList.add('show'); sShow.classList.add('shown'); sShow.textContent = '✓ Answers shown · hide';
-  };
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        font-weight: 600;
+        margin: 0;
+      }
+      h1 {
+        font-size: 3.3rem;
+        line-height: 1.02;
+      }
+      h2 {
+        font-size: 2.25rem;
+        line-height: 1.1;
+      }
+      h3 {
+        font-size: 1.35rem;
+        line-height: 1.15;
+      }
+      p {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+      .sm {
+        font-size: 0.82rem;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .dark .muted {
+        color: #c9d3ea;
+      }
+      .sun .muted,
+      .lilac .muted {
+        color: #3b3420;
+      }
+      .lilac .muted {
+        color: #2c2466;
+      }
 
-  /* ---------- scale slider ---------- */
-  const sc = document.getElementById('sc'), cards = [...document.querySelectorAll('#scale .card')], face = document.getElementById('face');
-  const faces = ['🙂', '😐', '😒', '😱'];
-  const setScale = () => {
-    const v = +sc.value;
-    cards.forEach((c, i) => { c.classList.toggle('dim', i !== v - 1); c.classList.toggle('on', i === v - 1); });
-    face.textContent = faces[v - 1];
-  };
-  sc.addEventListener('input', () => { setScale(); speak(cards[+sc.value - 1].querySelector('h3').textContent); });
-  cards.forEach((c, i) => c.addEventListener('click', () => { sc.value = i + 1; setScale(); }));
-  setScale();
+      .grid {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(min(100%, var(--min, 15rem)), 1fr)
+        );
+      }
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+        gap: 1rem;
+      }
+      .card {
+        background: var(--paper);
+        border: 3px solid var(--line, #ece4d3);
+        border-radius: 0.8rem;
+        padding: 0.75rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .dark .card {
+        background: var(--navy2);
+        border-color: transparent;
+      }
+      .sun .card,
+      .lilac .card {
+        background: var(--cream);
+        border-color: transparent;
+      }
+      .nom {
+        --line: var(--tealT);
+      }
+      .akk {
+        --line: var(--coralT);
+      }
+      .fill-teal {
+        background: var(--tealT);
+        border-color: transparent;
+      }
+      .fill-yellow {
+        background: var(--yellowT);
+        border-color: transparent;
+      }
+      .fill-lilac {
+        background: var(--lilacT);
+        border-color: transparent;
+      }
+      .fill-coral {
+        background: var(--coralT);
+        border-color: transparent;
+      }
+      .n {
+        color: var(--tealD);
+        font-weight: 800;
+      }
+      .a {
+        color: var(--coralD);
+        font-weight: 800;
+      }
+      .dark .n {
+        color: #5fe0d3;
+      }
+      .dark .a {
+        color: #ff9a8a;
+      }
 
-  /* ---------- activity 3 spinner ---------- */
-  const nouns = [
-    ['der', 'Kaffee', 'coffee'], ['der', 'Winter', 'winter'], ['der', 'Film', 'film'],
-    ['die', 'Mensa', 'cafeteria'], ['die', 'Musik', 'music'], ['die', 'Stadt', 'town'],
-    ['das', 'Wetter', 'weather'], ['das', 'Essen', 'food'], ['das', 'Handy', 'phone']
-  ];
-  const love = { adj: ['mega', 'echt cool', 'spitze', 'fantastisch', 'voll krass'], sein: ['der Hammer', 'der Wahnsinn', 'Bombe'] };
-  const hate = { adj: ['gar nicht cool'], sein: ['nicht mein Ding', 'Mist', '’ne Katastrophe', 'zum Vergessen', 'nicht der Brüller'] };
-  const EN = {
-    'mega': 'amazing', 'echt cool': 'really cool', 'spitze': 'great', 'fantastisch': 'fantastic', 'voll krass': 'totally rad',
-    'der Hammer': 'awesome', 'der Wahnsinn': 'incredible', 'Bombe': 'brilliant', 'gar nicht cool': 'not cool at all',
-    'nicht mein Ding': 'not my thing', 'Mist': 'crap', '’ne Katastrophe': 'a disaster', 'zum Vergessen': 'forgettable', 'nicht der Brüller': 'not great'
-  };
-  const pick = a => a[Math.floor(Math.random() * a.length)];
-  const acc = g => g === 'der' ? 'den' : g;
-  const cap = s => s[0].toUpperCase() + s.slice(1);
-  let sp = null;
-  const spArt = document.getElementById('spArt'), spNoun = document.getElementById('spNoun'), spEn = document.getElementById('spEn'),
-        spMood = document.getElementById('spMood'), spAns = document.getElementById('spAns'), spA1 = document.getElementById('spA1'), spA2 = document.getElementById('spA2'),
-        spShow = document.getElementById('spShow');
-  const spin = () => {
-    const [g, w, en] = pick(nouns), isLove = Math.random() < .5, m = isLove ? love : hate;
-    sp = { g, w, en, isLove, adj: pick(m.adj), sein: pick(m.sein) };
-    spArt.textContent = '___'; spNoun.textContent = w; spEn.textContent = en + ' · ' + g + ' ' + w;
-    spMood.textContent = isLove ? '😍 Love it' : '😒 Hate it';
-    spMood.style.background = isLove ? 'var(--yellow)' : 'var(--lilac)';
-    spAns.classList.remove('show');
-    spShow.classList.remove('shown'); spShow.textContent = '👁 Show answer';
-  };
-  document.getElementById('spGo').onclick = spin;
-  spShow.onclick = () => {
-    if (!sp) spin();
-    if (spAns.classList.contains('show')) { spAns.classList.remove('show'); spShow.classList.remove('shown'); spShow.textContent = '👁 Show answer'; spArt.textContent = '___'; return; }
-    spShow.classList.add('shown'); spShow.textContent = '✓ Answer shown · hide';
-    document.getElementById('spA1en').textContent = '🇬🇧 I find the ' + sp.en + ' ' + EN[sp.adj] + '!';
-    document.getElementById('spA2en').textContent = '🇬🇧 The ' + sp.en + ' is ' + EN[sp.sein] + '!';
-    spArt.textContent = acc(sp.g);
-    spA1.innerHTML = 'B: „Ich finde <b style="color:#FF9A8A">' + acc(sp.g) + '</b> ' + sp.w + ' ' + sp.adj + '!“ <span class="sm" style="color:#C9D3EA">· finden → acc.</span>';
-    spA1.dataset.say = 'Ich finde ' + acc(sp.g) + ' ' + sp.w + ' ' + sp.adj + '!';
-    spA2.innerHTML = 'or „<b style="color:#5FE0D3">' + cap(sp.g) + '</b> ' + sp.w + ' ist ' + sp.sein + '!“ <span class="sm" style="color:#C9D3EA">· sein → nom.</span>';
-    spA2.dataset.say = cap(sp.g) + ' ' + sp.w + ' ist ' + sp.sein + '!';
-    spAns.classList.add('show');
-    speak(spA1.dataset.say);
-  };
-  spin();
+      .callout {
+        background: var(--navy);
+        color: var(--cream);
+        border-radius: 0.9rem;
+        padding: 0.75rem 1.2rem;
+        display: flex;
+        gap: 0.9rem;
+        align-items: center;
+      }
+      .dark .callout {
+        background: var(--yellow);
+        color: var(--navy);
+      }
+      .callout .ico {
+        font-size: 1.4rem;
+        line-height: 1;
+      }
 
-  /* ---------- rating rain ---------- */
-  const rain = (set) => {
-    for (let k = 0; k < 36; k++) {
-      const e = document.createElement('span');
-      e.className = 'rain'; e.textContent = pick(set);
-      e.style.left = Math.random() * 100 + 'vw';
-      e.style.animationDuration = (1.8 + Math.random() * 1.8) + 's';
-      e.style.animationDelay = Math.random() * .8 + 's';
-      document.body.appendChild(e);
-      setTimeout(() => e.remove(), 4800);
-    }
-  };
-  const rG = document.getElementById('rateGood'), rB = document.getElementById('rateBad');
-  rG.onclick = () => { rain(['🎉', '😍', '⭐', '🥳', '🔨']); speak('Mega! Danke schön!'); rG.classList.add('shown'); rG.textContent = '✓ 😍 Mega! = Amazing!'; };
-  rB.onclick = () => { rain(['🌧️', '😒', '🧀', '💧']); speak('Oh nein! Das ist Mist!'); rB.classList.add('shown'); rB.textContent = '✓ 😒 Mist! = Crap!'; };
+      .bigq {
+        border-radius: 1rem;
+        padding: 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        justify-content: center;
+      }
+      .bigq .q {
+        font-family: var(--display);
+        font-size: 3rem;
+        line-height: 1;
+        font-weight: 600;
+      }
 
-  /* ---------- start ---------- */
-  const fromHash = () => { const h = parseInt(location.hash.slice(1), 10); return h >= 1 && h <= slides.length ? h - 1 : null; };
-  window.addEventListener('hashchange', () => { const h = fromHash(); if (h !== null && h !== cur) go(h); });
-  go(fromHash() ?? 0, 1);
-})();
-</script>
-</body>
+      .say {
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+        text-decoration-color: rgba(127, 127, 127, 0.6);
+        border-radius: 0.25em;
+        transition: background 0.2s;
+      }
+      .say:hover {
+        background: rgba(255, 200, 87, 0.35);
+      }
+      .say.speaking,
+      .tile.speaking {
+        animation: pulse 0.7s;
+      }
+      @keyframes pulse {
+        50% {
+          transform: scale(1.04);
+        }
+      }
+
+      .btn {
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 800;
+        border: 0;
+        border-radius: 2rem;
+        padding: 0.42rem 1.05rem;
+        cursor: pointer;
+        background: var(--navy);
+        color: var(--cream);
+        transition: transform 0.15s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+      .dark .btn {
+        background: var(--yellow);
+        color: var(--navy);
+      }
+      .btn.ghost {
+        background: transparent;
+        border: 2px solid currentColor;
+        color: inherit;
+      }
+      button:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      /* quiz options */
+      .opts {
+        display: flex;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+      }
+      .opt {
+        font: inherit;
+        font-size: 0.88rem;
+        font-weight: 800;
+        padding: 0.25rem 0.95rem;
+        border-radius: 2rem;
+        border: 2px solid #9aa7c7;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+      }
+      .opt:hover {
+        border-color: var(--yellow);
+      }
+      .opt.right {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: var(--navy);
+      }
+      .opt.wrong {
+        background: var(--coral);
+        border-color: var(--coral);
+        color: var(--navy);
+        animation: shake 0.35s;
+      }
+      @keyframes shake {
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+      .fb {
+        font-size: 0.78rem;
+        min-height: 1.1em;
+        font-weight: 700;
+      }
+      .opt.ans {
+        font-size: 0.78rem;
+        border-style: dashed;
+      }
+      .opt.right::before {
+        content: "✓ ";
+      }
+      .opt.wrong::before {
+        content: "✗ ";
+      }
+      .q.solved {
+        border-color: var(--teal) !important;
+        box-shadow: inset 0 0 0 1px var(--teal);
+      }
+      .q.solved .opt.ans {
+        display: none;
+      }
+      .q .en-line {
+        color: #5fe0d3;
+        font-weight: 700;
+      }
+
+      /* where-to-click hints + clicked states */
+      .hint {
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 0.22rem 0.8rem;
+        border-radius: 2rem;
+        background: rgba(255, 200, 87, 0.22);
+        border: 2px dashed var(--yellow);
+        animation: nudge 1.6s ease-in-out infinite;
+      }
+      .dark .hint {
+        color: var(--yellow);
+      }
+      .sun .hint,
+      .lilac .hint {
+        background: rgba(255, 253, 248, 0.55);
+        border-color: var(--navy);
+      }
+      @keyframes nudge {
+        50% {
+          transform: translateY(-3px);
+        }
+      }
+      .btn.shown {
+        background: var(--teal) !important;
+        color: var(--navy) !important;
+        border-color: var(--teal) !important;
+      }
+      .btn.picked {
+        box-shadow:
+          0 0 0 4px var(--cream),
+          0 0 0 7px var(--teal);
+      }
+      .btn.picked.bad {
+        box-shadow:
+          0 0 0 4px var(--cream),
+          0 0 0 7px var(--coral);
+      }
+      .reveal-box {
+        display: none;
+        flex-direction: column;
+        gap: 0.35rem;
+        background: rgba(46, 196, 182, 0.14);
+        border: 2px solid var(--teal);
+        border-radius: 0.8rem;
+        padding: 0.7rem 1rem;
+      }
+      .reveal-box.show {
+        display: flex;
+      }
+      .reveal-box .en {
+        color: #5fe0d3;
+        font-size: 0.85rem;
+      }
+      .tile {
+        position: relative;
+        padding: 0.6rem 2.7rem 0.6rem 1rem;
+      }
+      .tile .de {
+        font-size: 0.92rem;
+      }
+      .tile::after {
+        content: "👆";
+        position: absolute;
+        top: 0.5rem;
+        right: 0.55rem;
+        width: 1.6rem;
+        height: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 800;
+        border-radius: 50%;
+        background: rgba(22, 33, 62, 0.1);
+        color: inherit;
+      }
+      .dark .tile::after {
+        background: rgba(255, 255, 255, 0.14);
+      }
+      .tile.open {
+        border-color: var(--teal) !important;
+      }
+      .tile.open::after {
+        content: "✓";
+        background: var(--teal);
+        color: var(--navy);
+      }
+      #sitAns .list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem 1.4rem;
+      }
+      .row {
+        display: flex;
+        gap: 0.8rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .score {
+        font-family: var(--display);
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      /* timer */
+      .timer {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: var(--yellow);
+        color: var(--navy);
+        border-radius: 0.9rem;
+        padding: 0.55rem 1.1rem;
+        flex-wrap: wrap;
+      }
+      .timer .t {
+        font-family: var(--display);
+        font-size: 1.6rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        min-width: 3.1em;
+      }
+      .timer .lbl {
+        font-weight: 800;
+        flex: 1;
+        min-width: 10rem;
+      }
+      .timer .btn {
+        background: var(--navy);
+        color: var(--cream);
+      }
+      .timer.done {
+        background: var(--coral);
+        animation: shake 0.4s 3;
+      }
+
+      /* tiles */
+      .tile {
+        cursor: pointer;
+        user-select: none;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+      .tile:hover {
+        transform: translateY(-3px);
+      }
+      .tile .de {
+        font-weight: 800;
+        font-size: 1rem;
+      }
+      .tile .en {
+        font-size: 0.85rem;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          opacity 0.25s,
+          max-height 0.25s;
+      }
+      .tile.open .en {
+        opacity: 1;
+        max-height: 3em;
+      }
+      .tile.open {
+        background: var(--paper);
+      }
+      .sun .tile.open {
+        background: #fff8e6;
+      }
+      .lilac .tile.open {
+        background: #f3f0ff;
+      }
+
+      /* flip game */
+      .flip .verdict {
+        display: none;
+        font-weight: 800;
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+      }
+      .flip.open .verdict {
+        display: block;
+      }
+      .flip.open.good {
+        background: #1f4d58;
+      }
+      .flip.open.bad {
+        background: #5a2b35;
+      }
+      .flip .emo {
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
+      /* table */
+      .tablewrap {
+        overflow-x: auto;
+        border-radius: 0.8rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 1rem;
+        min-width: 34rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.8rem;
+      }
+      th {
+        background: var(--navy);
+        color: var(--cream);
+      }
+      tr:nth-child(2) td {
+        background: var(--coralT);
+      }
+      tr td {
+        background: var(--paper);
+        border-top: 2px solid #efe7d6;
+      }
+
+      /* scale */
+      .scale {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.7rem;
+      }
+      .scale .card {
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+      }
+      .scale .card.dim {
+        opacity: 0.35;
+      }
+      .scale .card.on {
+        transform: translateY(-6px);
+        box-shadow: 0 0.5rem 1.2rem rgba(22, 33, 62, 0.15);
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--coral);
+        height: 2rem;
+        cursor: pointer;
+      }
+      .gradbar {
+        height: 0.6rem;
+        border-radius: 1rem;
+        background: linear-gradient(
+          90deg,
+          var(--teal),
+          var(--yellow),
+          var(--coral)
+        );
+      }
+      .face {
+        font-size: 2.6rem;
+        line-height: 1;
+      }
+
+      /* stage boxes */
+      .stage {
+        background: var(--navy2);
+        border-radius: 1rem;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-height: 9rem;
+        justify-content: center;
+      }
+      .badge {
+        align-self: flex-start;
+        font-size: 0.78rem;
+        font-weight: 800;
+        padding: 0.2rem 0.8rem;
+        border-radius: 2rem;
+        color: var(--navy);
+      }
+      .big {
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1.3;
+      }
+      .blank {
+        display: inline-block;
+        min-width: 3.2em;
+        border-bottom: 3px solid currentColor;
+        text-align: center;
+        color: var(--yellow);
+      }
+      .chip {
+        font-size: 0.9rem;
+        font-weight: 700;
+        padding: 0.35rem 0.8rem;
+        border-radius: 0.6rem;
+      }
+
+      /* decor */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: var(--navy);
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+      .blob:hover {
+        transform: scale(1.08) rotate(-4deg);
+      }
+      .decor {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 22rem;
+      }
+      .hero {
+        max-width: 31rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+      }
+
+      /* chrome */
+      #prog {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 5px;
+        background: var(--yellow);
+        z-index: 20;
+        transition: width 0.35s;
+      }
+      #bar {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        background: rgba(22, 33, 62, 0.94);
+        color: var(--cream);
+        padding: 5px 8px;
+        border-radius: 30px;
+        z-index: 20;
+        font:
+          700 14px "Nunito Sans",
+          Arial,
+          sans-serif;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+        transition: opacity 0.3s;
+      }
+      #bar button {
+        font: inherit;
+        background: transparent;
+        color: inherit;
+        border: 0;
+        padding: 7px 11px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+      #bar button:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      #count {
+        min-width: 58px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      @media (hover: hover) {
+        #bar {
+          opacity: 0.35;
+        }
+        #bar:hover,
+        #bar:focus-within {
+          opacity: 1;
+        }
+      }
+      #notes {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        bottom: 64px;
+        max-width: 900px;
+        margin: 0 auto;
+        max-height: 34vh;
+        overflow: auto;
+        background: rgba(22, 33, 62, 0.97);
+        color: var(--cream);
+        font:
+          16px/1.5 "Nunito Sans",
+          Arial,
+          sans-serif;
+        padding: 14px 18px;
+        border-radius: 14px;
+        z-index: 19;
+        display: none;
+        border: 2px solid var(--yellow);
+      }
+      #notes.show {
+        display: block;
+      }
+      #notes b {
+        color: var(--yellow);
+      }
+      #ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(22, 33, 62, 0.97);
+        z-index: 30;
+        display: none;
+        overflow: auto;
+        padding: 32px 16px;
+      }
+      #ov.show {
+        display: block;
+      }
+      #ov .list {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      #ov button {
+        font:
+          600 16px "Nunito Sans",
+          Arial,
+          sans-serif;
+        text-align: left;
+        background: var(--navy2);
+        color: var(--cream);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 14px;
+        cursor: pointer;
+      }
+      #ov button:hover,
+      #ov button.cur {
+        border-color: var(--yellow);
+      }
+      #ov button span {
+        display: block;
+        color: var(--yellow);
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      #ov h2 {
+        color: var(--cream);
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 28px;
+      }
+      .rain {
+        position: fixed;
+        top: -3rem;
+        font-size: 2.2rem;
+        z-index: 40;
+        pointer-events: none;
+        animation: fall linear forwards;
+      }
+      @keyframes fall {
+        to {
+          transform: translateY(110vh) rotate(360deg);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .slide {
+          padding: 1.4rem 1.1rem 5.5rem;
+        }
+        .split {
+          grid-template-columns: 1fr;
+        }
+        .scale {
+          grid-template-columns: 1fr 1fr;
+        }
+        .decor {
+          display: none;
+        }
+        h1 {
+          font-size: 2.6rem;
+        }
+        h2 {
+          font-size: 1.8rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="prog"></div>
+    <main id="deck">
+      <!-- 1 COVER -->
+      <section
+        class="slide dark"
+        data-notes="Hello everyone! Today we look at two things. First, grammar: the nominative and the accusative case. Second, everyday German: how to say you love something or you don’t like it. You will do three short activities with a partner, so get ready to talk."
+      >
+        <div class="decor" aria-hidden="true">
+          <div
+            class="blob say"
+            data-say="Mega!"
+            style="
+              right: 9rem;
+              top: 12%;
+              width: 9rem;
+              height: 9rem;
+              background: var(--yellow);
+            "
+          >
+            Mega!
+          </div>
+          <div
+            class="blob say"
+            data-say="den Mann"
+            style="
+              right: 1.5rem;
+              top: 32%;
+              width: 7.5rem;
+              height: 7.5rem;
+              background: var(--coral);
+            "
+          >
+            den Mann
+          </div>
+          <div
+            class="blob say"
+            data-say="der Mann"
+            style="
+              right: 10rem;
+              top: 52%;
+              width: 8rem;
+              height: 8rem;
+              background: var(--teal);
+            "
+          >
+            der Mann
+          </div>
+          <div
+            class="blob say"
+            data-say="Mist!"
+            style="
+              right: 2rem;
+              top: 66%;
+              width: 6.5rem;
+              height: 6.5rem;
+              background: var(--lilac);
+            "
+          >
+            Mist!
+          </div>
+        </div>
+        <div class="wrap">
+          <div class="hero">
+            <span class="eyebrow teal">German for beginners</span>
+            <h1>
+              Nominative,<br />Accusative<br />&amp;
+              <span style="color: var(--yellow)">Slang</span>
+            </h1>
+            <p class="muted">
+              Who does what to whom, and how to sound like a real German when
+              you love or hate something.
+            </p>
+            <p
+              class="sm"
+              style="
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--yellow);
+              "
+            >
+              Fuad Hasan · Hochschule Harz
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 AGENDA -->
+      <section
+        class="slide"
+        data-notes="Quick overview. Part 1 is grammar. Parts 2 and 3 are everyday expressions, one positive and one negative. In between, three short activities with a partner. Show the tip: every dotted German phrase can be clicked to hear it. Tell the class: mistakes are welcome, just try."
+      >
+        <div class="wrap">
+          <span class="eyebrow">Overview</span>
+          <h2>Today’s plan</h2>
+          <div class="grid" style="--min: 20rem">
+            <div class="card fill-teal row" style="flex-direction: row">
+              <h2 style="width: 2.6rem">1</h2>
+              <div>
+                <h3>Nominative &amp; Accusative</h3>
+                <p class="muted">Who? Whom? What? Plus a quiz.</p>
+              </div>
+            </div>
+            <div class="card fill-yellow row" style="flex-direction: row">
+              <h2 style="width: 2.6rem">2</h2>
+              <div>
+                <h3>Excitement</h3>
+                <p class="muted">
+                  <span class="say">Das ist der Hammer!</span> and friends
+                </p>
+              </div>
+            </div>
+            <div class="card fill-lilac row" style="flex-direction: row">
+              <h2 style="width: 2.6rem">3</h2>
+              <div>
+                <h3>Not happy</h3>
+                <p class="muted">From polite to very strong</p>
+              </div>
+            </div>
+            <div class="card fill-coral row" style="flex-direction: row">
+              <h2 style="width: 2.6rem">★</h2>
+              <div>
+                <h3>Your turn!</h3>
+                <p class="muted">Pair activities and games</p>
+              </div>
+            </div>
+          </div>
+          <div class="callout">
+            <span class="ico">🔊</span>
+            <p>
+              <b>Tip:</b> click any
+              <span class="say" data-say="Hallo zusammen!"
+                >dotted German phrase</span
+              >
+              to hear how it sounds.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 LANGUAGE IS ALIVE -->
+      <section
+        class="slide"
+        data-notes="This is Inga’s idea: language is alive and full of variety. Many expressions are colloquial, but people really use them every day. It always depends on the situation and the person you talk to. Ask the class the question and collect two or three answers."
+      >
+        <div class="wrap">
+          <span class="eyebrow">Before we start</span>
+          <h2>Language is alive</h2>
+          <p class="muted">
+            Many phrases today are slang. Textbooks rarely teach them, but
+            Germans use them every day. What matters is <b>where</b> you are and
+            <b>who</b> you talk to.
+          </p>
+          <div class="grid">
+            <div class="card fill-yellow">
+              <p
+                class="sm muted"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                With friends
+              </p>
+              <h3 class="say">Das ist der Hammer!</h3>
+              <p class="muted">“This is awesome!”</p>
+            </div>
+            <div class="card fill-teal">
+              <p
+                class="sm muted"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Everyday, polite
+              </p>
+              <h3 class="say">Das ist nicht mein Ding.</h3>
+              <p class="muted">“That’s not my thing.”</p>
+            </div>
+            <div class="card fill-lilac">
+              <p
+                class="sm muted"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                With your boss
+              </p>
+              <h3 class="say">Sehr beeindruckend.</h3>
+              <p class="muted">“Very impressive.”</p>
+            </div>
+          </div>
+          <div class="callout">
+            <span class="ico">💬</span>
+            <p>Quick question: Do you already know any German slang words?</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 NOMINATIVE -->
+      <section
+        class="slide"
+        data-notes="The nominative is the basic form, the one you find in the dictionary. The test question is: Wer? (who) or Was? (what). The subject is always in the nominative, no exceptions. In example 3 the ball comes first, but the subject is still the boy. German word order is flexible, so the article tells you who is doing what."
+      >
+        <div class="wrap">
+          <span class="eyebrow teal">Part 1 · Grammar</span>
+          <h2>Nominative: the doer</h2>
+          <div class="split">
+            <div class="bigq" style="background: var(--teal)">
+              <span class="q say" data-say="Wer? Was?">Wer?<br />Was?</span>
+              <p>
+                <b>Who? What?</b> The subject: the person or thing doing the
+                action. The verb matches it.
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <div class="card nom">
+                <p class="say" data-say="Das Pferd ist weiß.">
+                  „<span class="n">Das Pferd</span> ist weiß.“
+                </p>
+                <p class="sm muted">
+                  The horse is white. What is white? The horse.
+                </p>
+              </div>
+              <div class="card nom">
+                <p class="say" data-say="Der Mann schenkt der Frau die Blumen.">
+                  „<span class="n">Der Mann</span> schenkt der Frau die Blumen.“
+                </p>
+                <p class="sm muted">
+                  The man gives the woman the flowers. Who gives? The man.
+                </p>
+              </div>
+              <div class="card nom">
+                <p class="say" data-say="Den Ball hat der Junge bekommen.">
+                  „Den Ball hat <span class="n">der Junge</span> bekommen.“
+                </p>
+                <p class="sm muted">
+                  The boy got the ball. Careful: the subject is not always
+                  first!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 PREDICATIVE -->
+      <section
+        class="slide"
+        data-notes="This is called the predicative nominative. The second noun is not the subject, but it describes the subject, so it stays in the nominative. Common mistake: Er ist einen guten Arzt. Correct: ein guter Arzt. The box shows that this only works when sein or werden is the main verb, not a helper for the perfect tense."
+      >
+        <div class="wrap">
+          <span class="eyebrow teal">Part 1 · Grammar</span>
+          <h2>Special case: sein, werden, bleiben</h2>
+          <div class="tags">
+            <span
+              class="eyebrow teal say"
+              data-say="sein"
+              style="
+                font-size: 0.95rem;
+                text-transform: none;
+                letter-spacing: 0;
+              "
+              >sein · to be</span
+            >
+            <span
+              class="eyebrow teal say"
+              data-say="werden"
+              style="
+                font-size: 0.95rem;
+                text-transform: none;
+                letter-spacing: 0;
+              "
+              >werden · to become</span
+            >
+            <span
+              class="eyebrow teal say"
+              data-say="bleiben"
+              style="
+                font-size: 0.95rem;
+                text-transform: none;
+                letter-spacing: 0;
+              "
+              >bleiben · to stay</span
+            >
+          </div>
+          <p class="muted">
+            After these verbs, the second noun is <b>also nominative</b>. Think
+            of it as an equals sign: <b>Jan = my teacher</b>.
+          </p>
+          <div
+            class="split"
+            style="grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr)"
+          >
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <div class="card nom">
+                <p class="say" data-say="Jan ist mein Lehrer.">
+                  „Jan ist <span class="n">mein Lehrer</span>.“
+                </p>
+                <p class="sm muted">Jan is my teacher.</p>
+              </div>
+              <div class="card nom">
+                <p class="say" data-say="Er wird ein guter Arzt.">
+                  „Er wird <span class="n">ein guter Arzt</span>.“
+                </p>
+                <p class="sm muted">He is becoming a good doctor.</p>
+              </div>
+            </div>
+            <div class="card fill-yellow">
+              <p
+                class="sm"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                ⚠️ Watch out
+              </p>
+              <p class="say" data-say="Er ist zu dem Mann gegangen.">
+                „Er <b>ist</b> zu dem Mann gegangen.“
+              </p>
+              <p class="sm muted">
+                Here “ist” is just a helper for the past tense (he went). This
+                rule does not apply.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 ACCUSATIVE -->
+      <section
+        class="slide"
+        data-notes="The accusative is used for the direct object, after certain verbs and after certain prepositions. Test question: Wen? (whom) or Was? (what). Good news: most German verbs take the accusative, like haben, sehen, kaufen, spielen, finden. Remember finden, we will need it later for the slang part."
+      >
+        <div class="wrap">
+          <span class="eyebrow coral">Part 1 · Grammar</span>
+          <h2>Accusative: the thing affected</h2>
+          <div class="split">
+            <div class="bigq" style="background: var(--coral)">
+              <span class="q say" data-say="Wen? Was?">Wen?<br />Was?</span>
+              <p>
+                <b>Whom? What?</b> The direct object: the thing the action
+                happens to. It does nothing itself.
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <div class="card akk">
+                <p class="say" data-say="Der Mann hat ein Pferd.">
+                  „Der Mann hat <span class="a">ein Pferd</span>.“
+                </p>
+                <p class="sm muted">
+                  The man has a horse. What does he have? A horse.
+                </p>
+              </div>
+              <div class="card akk">
+                <p class="say" data-say="Er spielt den Ball.">
+                  „Er spielt <span class="a">den Ball</span>.“
+                </p>
+                <p class="sm muted">
+                  He plays the ball. What does he play? The ball.
+                </p>
+              </div>
+              <div class="card akk">
+                <p class="say" data-say="Ich sehe den Hund.">
+                  „Ich sehe <span class="a">den Hund</span>.“
+                </p>
+                <p class="sm muted">I see the dog. Whom do I see? The dog.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 ARTICLES -->
+      <section
+        class="slide"
+        data-notes="This is the most important grammar slide. Articles change with the case. The good news: you only see a difference with masculine nouns. That’s why it pays to learn every noun with its article: der Hund, die Katze, das Haus. Ask: who spots the change first?"
+      >
+        <div class="wrap">
+          <span class="eyebrow coral">Part 1 · Grammar</span>
+          <h2>Only one article changes</h2>
+          <div class="tablewrap">
+            <table>
+              <tr>
+                <th>Gender</th>
+                <th>Nom. “the”</th>
+                <th>Acc. “the”</th>
+                <th>Nom. “a”</th>
+                <th>Acc. “a”</th>
+              </tr>
+              <tr>
+                <td><b>Masculine</b></td>
+                <td class="say">der Mann</td>
+                <td class="say" data-say="den Mann">
+                  <span class="a">den</span> Mann
+                </td>
+                <td class="say">ein Mann</td>
+                <td class="say" data-say="einen Mann">
+                  <span class="a">einen</span> Mann
+                </td>
+              </tr>
+              <tr>
+                <td><b>Feminine</b></td>
+                <td class="say">die Frau</td>
+                <td class="say">die Frau</td>
+                <td class="say">eine Frau</td>
+                <td class="say">eine Frau</td>
+              </tr>
+              <tr>
+                <td><b>Neuter</b></td>
+                <td class="say">das Kind</td>
+                <td class="say">das Kind</td>
+                <td class="say">ein Kind</td>
+                <td class="say">ein Kind</td>
+              </tr>
+              <tr>
+                <td><b>Plural</b></td>
+                <td class="say">die Eltern</td>
+                <td class="say">die Eltern</td>
+                <td>– Eltern</td>
+                <td>– Eltern</td>
+              </tr>
+            </table>
+          </div>
+          <div class="callout">
+            <span class="ico">💡</span>
+            <p>
+              <b>Remember:</b> only masculine changes:
+              <b style="color: var(--yellow)">der → den</b> and
+              <b style="color: var(--yellow)">ein → einen</b>. Feminine, neuter
+              and plural stay the same.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 PREPOSITIONS -->
+      <section
+        class="slide"
+        data-notes="Um, durch, ohne, bis, für and gegen always take the accusative. The preposition does not care what the verb would like. If one of these words is in front of the noun, all other rules are switched off. Say the six words out loud together with the class, two times."
+      >
+        <div class="wrap">
+          <span class="eyebrow coral">Part 1 · Grammar</span>
+          <h2>Six words that always want accusative</h2>
+          <p class="muted">
+            After these prepositions it is <b>always</b> accusative. No thinking
+            needed!
+          </p>
+          <div class="grid" style="--min: 14rem">
+            <div class="card akk">
+              <h3 class="a">durch · through</h3>
+              <p class="say">durch <b>den</b> Tunnel</p>
+            </div>
+            <div class="card akk">
+              <h3 class="a">für · for</h3>
+              <p class="say">für <b>meinen</b> Bruder</p>
+            </div>
+            <div class="card akk">
+              <h3 class="a">um · around</h3>
+              <p class="say">um <b>den</b> See</p>
+            </div>
+            <div class="card akk">
+              <h3 class="a">ohne · without</h3>
+              <p class="say">ohne <b>meinen</b> Laptop</p>
+            </div>
+            <div class="card akk">
+              <h3 class="a">bis · until</h3>
+              <p class="say">bis <b>nächsten</b> Montag</p>
+            </div>
+            <div class="card akk">
+              <h3 class="a">gegen · against</h3>
+              <p class="say">gegen <b>den</b> Meister</p>
+            </div>
+          </div>
+          <div class="callout">
+            <span class="ico">🎵</span>
+            <p>
+              Memory trick: say
+              <span class="say" data-say="durch, für, um, ohne, bis, gegen"
+                >„durch, für, um, ohne, bis, gegen“</span
+              >
+              like a little song.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 ACTIVITY 1 -->
+      <section
+        class="slide dark"
+        data-notes="Activity 1. Pairs, three minutes. Start the timer. Pairs discuss each sentence and say the test question. Then click the answers together with the class: let them shout first, then click. Wrong answers shake and can be tried again. Point out number 5 (after sein = nominative) and number 6 (feminine stays die)."
+      >
+        <div class="wrap" style="gap: 0.6rem">
+          <div class="row">
+            <span class="eyebrow coral">Activity 1 · In pairs</span
+            ><span class="hint"
+              >👆 Click an article to answer · 👁 to show the answer</span
+            ><button class="btn ghost" id="q1all" style="margin-left: auto">
+              👁 Show all answers
+            </button>
+          </div>
+          <h2>Nominative or accusative?</h2>
+          <div class="grid" id="q1" style="--min: 15rem">
+            <div
+              class="card q"
+              data-ans="den"
+              data-why="durch → always accusative."
+              data-en="He drives through the tunnel."
+            >
+              <p>„Er fährt durch <span class="blank">___</span> Tunnel.“</p>
+              <p class="sm muted hl">der Tunnel · through the tunnel</p>
+              <div class="opts">
+                <button class="opt">der</button><button class="opt">den</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+            <div
+              class="card q"
+              data-ans="Der"
+              data-why="Who has? → subject → nominative."
+              data-en="The man has a horse."
+            >
+              <p>„<span class="blank">___</span> Mann hat ein Pferd.“</p>
+              <p class="sm muted hl">der Mann · who has a horse?</p>
+              <div class="opts">
+                <button class="opt">Der</button><button class="opt">Den</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+            <div
+              class="card q"
+              data-ans="den"
+              data-why="What does he play? → accusative."
+              data-en="He plays the ball."
+            >
+              <p>„Er spielt <span class="blank">___</span> Ball.“</p>
+              <p class="sm muted hl">der Ball · he plays the ball</p>
+              <div class="opts">
+                <button class="opt">der</button><button class="opt">den</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+            <div
+              class="card q"
+              data-ans="einen"
+              data-why="haben → accusative: ein → einen."
+              data-en="I have a dog."
+            >
+              <p>„Ich habe <span class="blank">___</span> Hund.“</p>
+              <p class="sm muted hl">der Hund · I have a dog</p>
+              <div class="opts">
+                <button class="opt">ein</button
+                ><button class="opt">einen</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+            <div
+              class="card q"
+              data-ans="ein"
+              data-why="After „sein“ → nominative."
+              data-en="Jan is a good teacher."
+            >
+              <p>„Jan ist <span class="blank">___</span> guter Lehrer.“</p>
+              <p class="sm muted hl">der Lehrer · after „sein“</p>
+              <div class="opts">
+                <button class="opt">ein</button
+                ><button class="opt">einen</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+            <div
+              class="card q"
+              data-ans="die"
+              data-why="für → acc., feminine stays „die“."
+              data-en="The flowers are for the girlfriend."
+            >
+              <p>
+                „Die Blumen sind für <span class="blank">___</span> Freundin.“
+              </p>
+              <p class="sm muted hl">die Freundin · for the friend</p>
+              <div class="opts">
+                <button class="opt">die</button><button class="opt">den</button
+                ><button class="opt ans">👁 Answer</button>
+              </div>
+              <p class="fb"></p>
+            </div>
+          </div>
+          <div class="timer" data-sec="180">
+            <span class="t">3:00</span
+            ><span class="lbl">Pairs: Wer? Wen? Was?</span
+            ><span class="score">Score: <span id="q1score">0</span>/6</span
+            ><button class="btn ghost" id="q1reset" title="Reset answers">
+              ↺ Answers</button
+            ><button class="btn go">▶ Start</button
+            ><button class="btn ghost rs" title="Reset timer">↺</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 EXCITEMENT -->
+      <section
+        class="slide sun"
+        data-notes="Part 2: how to show you are excited about something. These ten phrases come from the handout. Click each card: it says the phrase and shows the English. Let the class repeat after the computer, with energy! The handout says use depends on region, age and social group, and some phrases like Geil can be inappropriate in certain situations."
+      >
+        <div class="wrap">
+          <div class="row">
+            <span class="eyebrow navy">Part 2 · Showing feelings</span
+            ><span class="hint"
+              >👆 Click a card to hear it + see the meaning</span
+            ><button class="btn" data-openall style="margin-left: auto">
+              👁 Show all meanings
+            </button>
+          </div>
+          <h2>When you love something 😍</h2>
+          <div class="grid" style="--min: 13rem">
+            <div class="card tile" data-say="Das ist der Hammer!">
+              <span class="de">Das ist der Hammer!</span
+              ><span class="en">This is awesome!</span>
+            </div>
+            <div class="card tile" data-say="Mega!">
+              <span class="de">Mega!</span><span class="en">Amazing!</span>
+            </div>
+            <div class="card tile" data-say="Voll krass!">
+              <span class="de">Voll krass!</span
+              ><span class="en">Totally rad!</span>
+            </div>
+            <div class="card tile" data-say="Echt cool!">
+              <span class="de">Echt cool!</span
+              ><span class="en">Really cool!</span>
+            </div>
+            <div class="card tile" data-say="Der Wahnsinn!">
+              <span class="de">Der Wahnsinn!</span
+              ><span class="en">The madness! (= incredible)</span>
+            </div>
+            <div class="card tile" data-say="Bombe!">
+              <span class="de">Bombe!</span><span class="en">Bombshell!</span>
+            </div>
+            <div class="card tile" data-say="Spitze!">
+              <span class="de">Spitze!</span><span class="en">Great!</span>
+            </div>
+            <div class="card tile" data-say="Das rockt!">
+              <span class="de">Das rockt!</span
+              ><span class="en">That rocks!</span>
+            </div>
+            <div class="card tile" data-say="Fantastisch!">
+              <span class="de">Fantastisch!</span
+              ><span class="en">Fantastic!</span>
+            </div>
+            <div class="card tile" data-say="Geil!">
+              <span class="de">Geil! ⚠️</span
+              ><span class="en">Cool! (careful: not everywhere)</span>
+            </div>
+          </div>
+          <p class="muted">Then repeat it with feeling! 🎉</p>
+        </div>
+      </section>
+
+      <!-- 11 REGISTER -->
+      <section
+        class="slide"
+        data-notes="The handout says Mega and Das ist der Hammer are very informal and not right for formal or serious situations. There it suggests sehr gut, exzellent or beeindruckend. For Voll krass it suggests sehr beeindruckend, außerordentlich or bemerkenswert. Play the mini quiz with the whole class: they shout Friends or Formal, then you click."
+      >
+        <div class="wrap">
+          <span class="eyebrow">Part 2 · Showing feelings</span>
+          <h2>Know your audience</h2>
+          <div class="grid" style="--min: 18rem">
+            <div class="card fill-yellow">
+              <p
+                class="sm"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                👫 Friends, informal
+              </p>
+              <p style="font-weight: 800">
+                <span class="say">Mega!</span> ·
+                <span class="say">Voll krass!</span> ·
+                <span class="say">Das ist der Hammer!</span>
+              </p>
+              <p class="sm muted">
+                „Du hast die Prüfung bestanden? Mega!“ · You passed? Amazing!
+              </p>
+            </div>
+            <div class="card fill-lilac">
+              <p
+                class="sm"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                🎓 Formal, serious
+              </p>
+              <p style="font-weight: 800">
+                <span class="say">sehr gut</span> ·
+                <span class="say">exzellent</span> ·
+                <span class="say">sehr beeindruckend</span> ·
+                <span class="say">bemerkenswert</span>
+              </p>
+              <p class="sm muted">
+                very good · excellent · very impressive · remarkable
+              </p>
+            </div>
+          </div>
+          <div
+            class="card"
+            style="
+              background: var(--navy);
+              color: var(--cream);
+              border-color: transparent;
+              gap: 0.6rem;
+            "
+            id="reg"
+          >
+            <div class="row">
+              <p
+                class="sm"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                  color: var(--yellow);
+                "
+              >
+                Mini quiz · Whole class: friends or formal?
+              </p>
+              <span class="hint" style="color: var(--yellow)"
+                >👆 Click Friends or Formal</span
+              >
+            </div>
+            <div class="row" style="justify-content: space-between">
+              <span class="big say" id="regWord">Mega!</span
+              ><span class="score" style="color: var(--yellow)"
+                ><span id="regScore">0</span> ✓</span
+              >
+            </div>
+            <div class="row">
+              <button
+                class="btn"
+                style="background: var(--yellow); color: var(--navy)"
+                data-reg="inf"
+              >
+                👫 Friends</button
+              ><button
+                class="btn"
+                style="background: var(--lilac); color: var(--navy)"
+                data-reg="for"
+              >
+                🎓 Formal</button
+              ><button class="btn ghost" id="regShow">👁 Show answer</button
+              ><button class="btn ghost" id="regNext" style="margin-left: auto">
+                Next ➜
+              </button>
+            </div>
+            <p class="fb" id="regFb" style="font-size: 0.9rem"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 ACTIVITY 2 -->
+      <section
+        class="slide dark"
+        data-notes="Activity 2, about three minutes. Click Casual situation or Formal situation. Do some of each, so the class practises both styles. Person A reads the German, person B reacts with a phrase that fits the audience shown on the badge. Then switch roles and click again. Ask two pairs to perform. For the formal badge ask: Mega, or better sehr beeindruckend?"
+      >
+        <div class="wrap" style="gap: 0.6rem">
+          <div class="row">
+            <span class="eyebrow">Activity 2 · In pairs</span
+            ><span class="hint"
+              >👆 Click 🎲 Casual or 🎲 Formal · 👁 for good answers</span
+            >
+          </div>
+          <h2>React like a German! 🎭</h2>
+          <p class="muted">
+            Person A reads the news. Person B reacts with the right phrase for
+            the person on the badge. Then switch!
+          </p>
+          <div class="stage" id="sit">
+            <span class="badge" id="sitBadge" style="background: var(--yellow)"
+              >👫 You are talking to a friend</span
+            >
+            <span class="big say" id="sitDe"
+              >„Ich habe die Prüfung bestanden!“</span
+            >
+            <span class="muted" id="sitEn">🇬🇧 I passed the exam!</span>
+            <div class="reveal-box" id="sitAns"></div>
+          </div>
+          <div class="row">
+            <button class="btn" id="sitNext">🎲 Casual situation</button
+            ><button
+              class="btn"
+              id="sitFormal"
+              style="background: var(--lilac); color: var(--navy)"
+            >
+              🎲 Formal situation</button
+            ><button class="btn ghost" id="sitShow">
+              👁 Show good answers
+            </button>
+          </div>
+          <div class="timer" data-sec="180">
+            <span class="t">3:00</span
+            ><span class="lbl">React, then switch roles</span
+            ><button class="btn go">▶ Start</button
+            ><button class="btn ghost rs">↺</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 NOT HAPPY -->
+      <section
+        class="slide lilac"
+        data-notes="Part 3: showing that you don’t like something. These ten phrases are from the second handout. The handout warns: be careful with the situation and the person, so you don’t seem rude or cause misunderstandings. Click and repeat, this time with an annoyed face."
+      >
+        <div class="wrap">
+          <div class="row">
+            <span class="eyebrow navy">Part 3 · Showing feelings</span
+            ><span class="hint"
+              >👆 Click a card to hear it + see the meaning</span
+            ><button class="btn" data-openall style="margin-left: auto">
+              👁 Show all meanings
+            </button>
+          </div>
+          <h2>When you don’t like something 😒</h2>
+          <div class="grid" style="--min: 15rem">
+            <div class="card tile" data-say="Das ist nicht mein Ding.">
+              <span class="de">Das ist nicht mein Ding.</span
+              ><span class="en">That’s not my thing.</span>
+            </div>
+            <div class="card tile" data-say="Das ist Mist.">
+              <span class="de">Das ist Mist.</span
+              ><span class="en">This is crap.</span>
+            </div>
+            <div class="card tile" data-say="Finde ich gar nicht cool.">
+              <span class="de">Finde ich gar nicht cool.</span
+              ><span class="en">I don’t think it’s cool at all.</span>
+            </div>
+            <div class="card tile" data-say="Das ist ’ne Katastrophe.">
+              <span class="de">Das ist ’ne Katastrophe.</span
+              ><span class="en">This is a disaster.</span>
+            </div>
+            <div class="card tile" data-say="Das ist Käse.">
+              <span class="de">Das ist Käse.</span
+              ><span class="en">“This is cheese.” = nonsense</span>
+            </div>
+            <div class="card tile" data-say="Das taugt nichts.">
+              <span class="de">Das taugt nichts.</span
+              ><span class="en">That’s no good.</span>
+            </div>
+            <div class="card tile" data-say="Das ist unter aller Kanone.">
+              <span class="de">Das ist unter aller Kanone.</span
+              ><span class="en">This is really awful.</span>
+            </div>
+            <div class="card tile" data-say="Das ist nicht der Brüller.">
+              <span class="de">Das ist nicht der Brüller.</span
+              ><span class="en">That’s not great.</span>
+            </div>
+            <div class="card tile" data-say="Damit kann ich nichts anfangen.">
+              <span class="de">Damit kann ich nichts anfangen.</span
+              ><span class="en">I can’t do anything with that.</span>
+            </div>
+            <div class="card tile" data-say="Das ist zum Vergessen.">
+              <span class="de">Das ist zum Vergessen.</span
+              ><span class="en">This is forgettable.</span>
+            </div>
+          </div>
+          <p class="sm muted">
+            ⚠️ Say it with an annoyed face, but think about who you talk to, so
+            you don’t sound rude.
+          </p>
+        </div>
+      </section>
+
+      <!-- 14 SCALE -->
+      <section
+        class="slide"
+        data-notes="Examples are from the handout. The handout says: Das ist nicht mein Ding is polite and non-binding, it does not sound negative. Finde ich gar nicht cool is relaxed, informal and youthful. Das ist Mist can sound a bit crass, so be careful in formal situations. Move the slider slowly from left to right. The order on the scale is my own guide, not a fixed rule. Ask: where would you put Das ist Käse?"
+      >
+        <div class="wrap">
+          <div class="row">
+            <span class="eyebrow lilac">Part 3 · Showing feelings</span
+            ><span class="hint">👆 Drag the slider or click a card</span>
+          </div>
+          <div class="row" style="justify-content: space-between">
+            <h2>How strong is it?</h2>
+            <span class="face" id="face">🙂</span>
+          </div>
+          <div class="gradbar"></div>
+          <input
+            type="range"
+            min="1"
+            max="4"
+            step="1"
+            value="1"
+            id="sc"
+            aria-label="Strength from polite to very strong"
+          />
+          <div class="scale" id="scale">
+            <div class="card fill-teal">
+              <p class="sm" style="font-weight: 800; text-transform: uppercase">
+                1 · Polite
+              </p>
+              <h3 class="say">Das ist nicht mein Ding.</h3>
+              <p
+                class="sm muted say"
+                data-say="Scharfes Essen? Nein, danke, das ist nicht mein Ding."
+              >
+                „Scharfes Essen? Nein, danke, das ist nicht mein Ding.“
+              </p>
+              <p class="sm muted">
+                🇬🇧 Spicy food? No thanks, that’s not my thing.
+              </p>
+            </div>
+            <div class="card fill-yellow">
+              <p class="sm" style="font-weight: 800; text-transform: uppercase">
+                2 · Casual
+              </p>
+              <h3 class="say">Finde ich gar nicht cool.</h3>
+              <p
+                class="sm muted say"
+                data-say="Die Absage des Konzerts? Das finde ich gar nicht cool."
+              >
+                „Die Absage des Konzerts? Das finde ich gar nicht cool.“
+              </p>
+              <p class="sm muted">
+                🇬🇧 The concert was cancelled? I don’t think that’s cool at all.
+              </p>
+            </div>
+            <div
+              class="card"
+              style="background: #ffe29b; border-color: transparent"
+            >
+              <p class="sm" style="font-weight: 800; text-transform: uppercase">
+                3 · Rude-ish
+              </p>
+              <h3 class="say">Das ist Mist!</h3>
+              <p
+                class="sm muted say"
+                data-say="Das Gerät funktioniert nicht. Das ist Mist!"
+              >
+                „Das Gerät funktioniert nicht. Das ist Mist!“
+              </p>
+              <p class="sm muted">🇬🇧 The device doesn’t work. This is crap!</p>
+            </div>
+            <div class="card fill-coral">
+              <p class="sm" style="font-weight: 800; text-transform: uppercase">
+                4 · Very strong
+              </p>
+              <h3 class="say">Das ist ’ne Katastrophe!</h3>
+              <p
+                class="sm muted say"
+                data-say="Mit dem ersten bin ich zufrieden, das zweite ist ’ne Katastrophe."
+              >
+                „Mit dem ersten bin ich zufrieden, das zweite ist ’ne
+                Katastrophe.“
+              </p>
+              <p class="sm muted">
+                🇬🇧 I’m happy with the first one, the second one is a disaster.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 LITERAL GAME -->
+      <section
+        class="slide dark"
+        data-notes="Quick whole-class game. Read each literal translation and let the class shout good or bad. Then click the card to reveal the real meaning. The point: slang often makes no sense word for word, you have to learn the meaning."
+      >
+        <div class="wrap">
+          <div class="row">
+            <span class="eyebrow lilac">Quick game · Whole class</span
+            ><span class="hint">👆 Click a card to see the answer</span
+            ><button
+              class="btn ghost"
+              data-openall
+              data-label="👁 Show all answers"
+              style="margin-left: auto"
+            >
+              👁 Show all answers
+            </button>
+          </div>
+          <h2>Word for word, it’s funny 😄</h2>
+          <p class="muted">
+            Read the literal translation. Shout: <b>good</b> or <b>bad</b>? Then
+            click to check.
+          </p>
+          <div class="grid" style="--min: 16rem">
+            <div class="card tile flip bad" data-say="Das ist Käse.">
+              <span class="emo">🧀</span><span class="de">Das ist Käse.</span
+              ><span class="sm muted">“This is cheese.”</span
+              ><span class="verdict">👎 BAD: it means “nonsense”</span>
+            </div>
+            <div class="card tile flip good" data-say="Das ist der Hammer!">
+              <span class="emo">🔨</span
+              ><span class="de">Das ist der Hammer!</span
+              ><span class="sm muted">“This is the hammer!”</span
+              ><span class="verdict">👍 GOOD: it means “awesome”</span>
+            </div>
+            <div class="card tile flip good" data-say="Bombe!">
+              <span class="emo">💣</span><span class="de">Bombe!</span
+              ><span class="sm muted">“Bomb!”</span
+              ><span class="verdict">👍 GOOD: it means “brilliant”</span>
+            </div>
+            <div
+              class="card tile flip bad"
+              data-say="Das ist nicht der Brüller."
+            >
+              <span class="emo">📢</span
+              ><span class="de">Das ist nicht der Brüller.</span
+              ><span class="sm muted">“That’s not the screamer.”</span
+              ><span class="verdict">👎 BAD: it means “not great”</span>
+            </div>
+            <div
+              class="card tile flip bad"
+              data-say="Das ist unter aller Kanone."
+            >
+              <span class="emo">💥</span
+              ><span class="de">Das ist unter aller Kanone.</span
+              ><span class="sm muted">“That’s below all cannons.”</span
+              ><span class="verdict">👎 BAD: it means “really awful”</span>
+            </div>
+            <div class="card tile flip good" data-say="Der Wahnsinn!">
+              <span class="emo">🤯</span><span class="de">Der Wahnsinn!</span
+              ><span class="sm muted">“The madness!”</span
+              ><span class="verdict">👍 GOOD: it means “incredible”</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 16 ACTIVITY 3 -->
+      <section
+        class="slide"
+        data-notes="Final activity, about four minutes. It combines both parts. Click Spin. Person A asks the question, person B answers in the mood shown. Then click Show answer. Look at the two answers: finden takes the accusative (den Kaffee), but sein keeps the nominative (der Kaffee). Feminine and neuter don’t change. Spin a few times with the class first, then let pairs continue on their own."
+      >
+        <div class="wrap">
+          <div class="row">
+            <span class="eyebrow coral"
+              >Activity 3 · In pairs · Grammar + Slang</span
+            ><span class="hint"
+              >👆 Click 🎲 Spin, answer, then 👁 Show answer</span
+            >
+          </div>
+          <h2>Love it or hate it? 🎲</h2>
+          <div
+            class="split"
+            style="grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr)"
+          >
+            <div
+              class="card"
+              style="
+                background: var(--navy);
+                color: var(--cream);
+                border-color: transparent;
+                gap: 0.45rem;
+              "
+            >
+              <p
+                class="sm"
+                style="
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                  color: var(--yellow);
+                "
+              >
+                The pattern
+              </p>
+              <p class="say" data-say="Wie findest du den Film?">
+                A: „Wie findest du <b style="color: #ff9a8a">den</b> Film?“
+              </p>
+              <p class="sm" style="color: #c9d3ea">How do you like the film?</p>
+              <p class="say" data-say="Ich finde den Film mega!">
+                B: „Ich finde <b style="color: #ff9a8a">den</b> Film mega!“
+              </p>
+              <p class="say" data-say="Der Film ist nicht mein Ding.">
+                or „<b style="color: #5fe0d3">Der</b> Film ist nicht mein Ding.“
+              </p>
+              <p class="sm" style="color: #c9d3ea">
+                <b>finden</b> → accusative · <b>sein</b> → nominative
+              </p>
+            </div>
+            <div class="stage" style="color: var(--cream)">
+              <div class="row" style="justify-content: space-between">
+                <span
+                  class="badge"
+                  id="spMood"
+                  style="background: var(--yellow)"
+                  >😍 Love it</span
+                ><span class="sm" id="spEn" style="color: #c9d3ea">coffee</span>
+              </div>
+              <span class="big"
+                >A: „Wie findest du <span class="blank" id="spArt">___</span>
+                <span id="spNoun">Kaffee</span>?“</span
+              >
+              <div class="reveal-box" id="spAns">
+                <span class="say" id="spA1"></span>
+                <span class="en" id="spA1en"></span>
+                <span class="say" id="spA2"></span>
+                <span class="en" id="spA2en"></span>
+              </div>
+              <div class="row">
+                <button class="btn" id="spGo">🎲 Spin</button
+                ><button class="btn ghost" id="spShow">👁 Show answer</button>
+              </div>
+            </div>
+          </div>
+          <div class="timer" data-sec="240">
+            <span class="t">4:00</span
+            ><span class="lbl">Spin, ask, answer, switch!</span
+            ><button class="btn go">▶ Start</button
+            ><button class="btn ghost rs">↺</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 SUMMARY -->
+      <section
+        class="slide"
+        data-notes="Short summary. One: use the question test, Wer for nominative, Wen for accusative. Two: only masculine articles change in the accusative. Three: slang is alive and useful, but always think about where you are and who you talk to."
+      >
+        <div class="wrap">
+          <span class="eyebrow">Summary</span>
+          <h2>Three things to take home</h2>
+          <div class="grid">
+            <div class="card fill-teal" style="padding: 1.3rem">
+              <h1 class="n" style="font-size: 2.6rem">1</h1>
+              <h3>Ask the question</h3>
+              <p class="muted">
+                <span class="say">Wer?</span> = nominative.<br /><span
+                  class="say"
+                  >Wen?</span
+                >
+                = accusative.
+              </p>
+            </div>
+            <div class="card fill-coral" style="padding: 1.3rem">
+              <h1 class="a" style="font-size: 2.6rem">2</h1>
+              <h3>Watch masculine</h3>
+              <p class="muted">
+                der → den, ein → einen. Everything else stays.
+              </p>
+            </div>
+            <div class="card fill-yellow" style="padding: 1.3rem">
+              <h1 style="font-size: 2.6rem; color: #7a5a00">3</h1>
+              <h3>Slang needs context</h3>
+              <p class="muted">
+                <span class="say">„Mega!“</span> with friends,
+                <span class="say">„sehr gut“</span> with your professor.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 18 THANKS -->
+      <section
+        class="slide dark"
+        data-notes="Thank everyone. Ask for questions. As a funny last challenge, ask one or two people to rate the presentation in German, for example: Ich finde die Präsentation mega! Then click the matching button. Small grammar check: Präsentation is feminine, so it stays die."
+      >
+        <div class="decor" aria-hidden="true">
+          <div
+            class="blob say"
+            data-say="Spitze!"
+            style="
+              right: 7rem;
+              top: 18%;
+              width: 9rem;
+              height: 9rem;
+              background: var(--yellow);
+            "
+          >
+            Spitze!
+          </div>
+          <div
+            class="blob say"
+            data-say="Fragen?"
+            style="
+              right: 1.5rem;
+              top: 52%;
+              width: 8rem;
+              height: 8rem;
+              background: var(--teal);
+            "
+          >
+            Fragen?
+          </div>
+        </div>
+        <div class="wrap">
+          <div class="hero">
+            <h1 class="say" data-say="Danke schön!" style="font-size: 3.8rem">
+              Danke<br />schön!
+            </h1>
+            <p
+              style="font-size: 1.35rem; color: var(--yellow); font-weight: 700"
+            >
+              Thank you! Any questions?
+            </p>
+            <p class="muted">
+              Last challenge: tell me in German what you thought of this
+              presentation.
+            </p>
+            <p class="muted say" data-say="Ich finde die Präsentation mega!">
+              „Ich finde <b>die</b> Präsentation …“
+            </p>
+            <div class="row">
+              <button class="btn" id="rateGood">😍 Mega!</button
+              ><button class="btn ghost" id="rateBad">😒 Mist!</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav id="bar" aria-label="Presentation controls">
+      <button id="prev" title="Previous (←)">◀</button>
+      <span id="count">1 / 18</span>
+      <button id="next" title="Next (→)">▶</button>
+      <button id="bNotes" title="Speaker notes (N)">📝 Notes</button>
+      <button id="bOv" title="All slides (O)">▦</button>
+      <button id="bFs" title="Fullscreen (F)">⛶</button>
+    </nav>
+    <div id="notes" role="region" aria-label="Speaker notes"></div>
+    <div id="ov">
+      <h2>All slides</h2>
+      <div class="list"></div>
+    </div>
+
+    <script>
+      (() => {
+        const slides = [...document.querySelectorAll(".slide")];
+        const count = document.getElementById("count");
+        const prog = document.getElementById("prog");
+        const notes = document.getElementById("notes");
+        const ov = document.getElementById("ov");
+        let cur = 0;
+
+        /* ---------- speech ---------- */
+        const synth = window.speechSynthesis;
+        function speak(text, el) {
+          if (!synth) return;
+          try {
+            synth.cancel();
+            const u = new SpeechSynthesisUtterance(
+              text.replace(/[„“”"…]/g, "").trim(),
+            );
+            u.lang = "de-DE";
+            u.rate = 0.9;
+            const v = synth.getVoices().find((v) => /^de/i.test(v.lang));
+            if (v) u.voice = v;
+            synth.speak(u);
+          } catch (e) {}
+          if (el) {
+            el.classList.remove("speaking");
+            void el.offsetWidth;
+            el.classList.add("speaking");
+          }
+        }
+        if (synth) synth.getVoices();
+        document.addEventListener("click", (e) => {
+          const s = e.target.closest("[data-say], .say");
+          if (!s || e.target.closest("button")) return;
+          speak(s.dataset.say || s.textContent, s);
+        });
+
+        /* ---------- navigation ---------- */
+        function title(s) {
+          const h = s.querySelector("h1, h2");
+          return h ? h.textContent.replace(/\s+/g, " ").trim() : "";
+        }
+        function go(n, dir) {
+          n = Math.max(0, Math.min(slides.length - 1, n));
+          if (n === cur && slides[cur].classList.contains("active")) return;
+          const back = dir === undefined ? n < cur : dir < 0;
+          slides[cur].classList.remove("active", "back");
+          cur = n;
+          const s = slides[cur];
+          s.classList.toggle("back", back);
+          s.classList.add("active");
+          s.scrollTop = 0;
+          count.textContent = cur + 1 + " / " + slides.length;
+          prog.style.width = ((cur + 1) / slides.length) * 100 + "%";
+          notes.innerHTML =
+            "<b>Slide " +
+            (cur + 1) +
+            " · " +
+            title(s) +
+            "</b><br>" +
+            (s.dataset.notes || "");
+          try {
+            history.replaceState(null, "", "#" + (cur + 1));
+          } catch (e) {}
+          if (synth) synth.cancel();
+        }
+        const next = () => go(cur + 1, 1),
+          prev = () => go(cur - 1, -1);
+        document.getElementById("next").onclick = next;
+        document.getElementById("prev").onclick = prev;
+        document.getElementById("bNotes").onclick = () =>
+          notes.classList.toggle("show");
+        const fs = () => {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen?.();
+        };
+        document.getElementById("bFs").onclick = fs;
+
+        const list = ov.querySelector(".list");
+        slides.forEach((s, i) => {
+          const b = document.createElement("button");
+          b.innerHTML = "<span>" + (i + 1) + "</span>" + title(s);
+          b.onclick = () => {
+            go(i);
+            ov.classList.remove("show");
+          };
+          list.appendChild(b);
+        });
+        const toggleOv = () => {
+          ov.classList.toggle("show");
+          [...list.children].forEach((b, i) =>
+            b.classList.toggle("cur", i === cur),
+          );
+        };
+        document.getElementById("bOv").onclick = toggleOv;
+
+        document.addEventListener("keydown", (e) => {
+          if (e.target.matches("input")) return;
+          const onBtn = e.target.closest("button");
+          const k = e.key;
+          if (k === "ArrowRight" || k === "PageDown" || (k === " " && !onBtn)) {
+            e.preventDefault();
+            next();
+          } else if (k === "ArrowLeft" || k === "PageUp") {
+            e.preventDefault();
+            prev();
+          } else if (k === "Home") go(0);
+          else if (k === "End") go(slides.length - 1);
+          else if (k === "n" || k === "N") notes.classList.toggle("show");
+          else if (k === "o" || k === "O") toggleOv();
+          else if (k === "f" || k === "F") fs();
+          else if (k === "Escape") ov.classList.remove("show");
+        });
+
+        let tx = null,
+          ty = 0;
+        document.addEventListener(
+          "touchstart",
+          (e) => {
+            if (e.target.closest("input")) {
+              tx = null;
+              return;
+            }
+            tx = e.touches[0].clientX;
+            ty = e.touches[0].clientY;
+          },
+          { passive: true },
+        );
+        document.addEventListener(
+          "touchend",
+          (e) => {
+            if (tx === null) return;
+            const dx = e.changedTouches[0].clientX - tx,
+              dy = e.changedTouches[0].clientY - ty;
+            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5)
+              dx < 0 ? next() : prev();
+            tx = null;
+          },
+          { passive: true },
+        );
+
+        /* ---------- timers ---------- */
+        document.querySelectorAll(".timer").forEach((t) => {
+          const total = +t.dataset.sec,
+            out = t.querySelector(".t"),
+            goB = t.querySelector(".go");
+          let left = total,
+            id = null;
+          const fmt = (s) =>
+            Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+          const stop = () => {
+            clearInterval(id);
+            id = null;
+          };
+          goB.onclick = () => {
+            if (id) {
+              stop();
+              goB.textContent = "▶ Start";
+              return;
+            }
+            if (left <= 0) left = total;
+            t.classList.remove("done");
+            goB.textContent = "❚❚ Pause";
+            id = setInterval(() => {
+              left--;
+              out.textContent = fmt(left);
+              if (left <= 0) {
+                stop();
+                goB.textContent = "▶ Start";
+                out.textContent = "Zeit!";
+                t.classList.add("done");
+                speak("Die Zeit ist um!");
+              }
+            }, 1000);
+          };
+          t.querySelector(".rs").onclick = () => {
+            stop();
+            left = total;
+            out.textContent = fmt(total);
+            goB.textContent = "▶ Start";
+            t.classList.remove("done");
+          };
+        });
+
+        /* ---------- activity 1 quiz ---------- */
+        const q1 = document.getElementById("q1"),
+          q1s = document.getElementById("q1score");
+        let q1score = 0;
+        const solveQ = (q, byButton) => {
+          if (q.dataset.done) return;
+          q.dataset.done = 1;
+          q.classList.add("solved");
+          q.querySelectorAll(".opt:not(.ans)").forEach((o) => {
+            if (o.textContent === q.dataset.ans) {
+              o.classList.remove("wrong");
+              o.classList.add("right");
+            }
+          });
+          q.querySelector(".blank").textContent = q.dataset.ans;
+          q.querySelector(".fb").textContent =
+            (byButton ? "👁 " : "✓ Richtig! ") + q.dataset.why;
+          const hl = q.querySelector(".hl");
+          hl.dataset.orig = hl.dataset.orig || hl.textContent;
+          hl.textContent = "🇬🇧 " + q.dataset.en;
+          hl.classList.add("en-line");
+          if (!byButton) q1s.textContent = ++q1score;
+          speak(q.querySelector("p").textContent.replace("___", q.dataset.ans));
+        };
+        q1.querySelectorAll(".q").forEach((q) => {
+          const fb = q.querySelector(".fb");
+          q.querySelectorAll(".opt").forEach(
+            (b) =>
+              (b.onclick = () => {
+                if (q.dataset.done) return;
+                if (b.classList.contains("ans")) return solveQ(q, true);
+                if (b.textContent === q.dataset.ans) solveQ(q, false);
+                else {
+                  b.classList.remove("wrong");
+                  void b.offsetWidth;
+                  b.classList.add("wrong");
+                  fb.textContent = "✗ Not quite. Ask: Wer? or Wen? Try again.";
+                }
+              }),
+          );
+        });
+        const q1all = document.getElementById("q1all");
+        q1all.onclick = () => {
+          q1.querySelectorAll(".q").forEach((q) => solveQ(q, true));
+          q1all.classList.add("shown");
+          q1all.textContent = "✓ All answers shown";
+        };
+        document.getElementById("q1reset").onclick = () => {
+          q1score = 0;
+          q1s.textContent = 0;
+          q1all.classList.remove("shown");
+          q1all.textContent = "👁 Show all answers";
+          q1.querySelectorAll(".q").forEach((q) => {
+            delete q.dataset.done;
+            q.classList.remove("solved");
+            q.querySelector(".fb").textContent = "";
+            q.querySelector(".blank").textContent = "___";
+            const hl = q.querySelector(".hl");
+            if (hl.dataset.orig) hl.textContent = hl.dataset.orig;
+            hl.classList.remove("en-line");
+            q.querySelectorAll(".opt").forEach((b) =>
+              b.classList.remove("right", "wrong"),
+            );
+          });
+        };
+
+        /* ---------- tiles ---------- */
+        document
+          .querySelectorAll(".tile")
+          .forEach((t) =>
+            t.addEventListener("click", () => t.classList.add("open")),
+          );
+        document.querySelectorAll("[data-openall]").forEach(
+          (b) =>
+            (b.onclick = () => {
+              const tiles = b.closest(".slide").querySelectorAll(".tile");
+              const allOpen = [...tiles].every((t) =>
+                t.classList.contains("open"),
+              );
+              tiles.forEach((t) => t.classList.toggle("open", !allOpen));
+              b.classList.toggle("shown", !allOpen);
+              b.textContent = allOpen
+                ? b.dataset.label || "👁 Show all meanings"
+                : "✓ Shown · click to hide";
+            }),
+        );
+
+        /* ---------- register quiz ---------- */
+        const regItems = [
+          ["Mega!", "inf", "Amazing!"],
+          ["sehr beeindruckend", "for", "very impressive"],
+          ["Voll krass!", "inf", "Totally rad!"],
+          ["exzellent", "for", "excellent"],
+          ["Das ist der Hammer!", "inf", "This is awesome!"],
+          ["bemerkenswert", "for", "remarkable"],
+          ["Geil!", "inf", "Cool! (careful, not everywhere)"],
+          ["sehr gut", "for", "very good"],
+          ["Das rockt!", "inf", "That rocks!"],
+          ["außerordentlich", "for", "extraordinary"],
+        ];
+        const regLabel = { inf: "👫 Friends (informal)", for: "🎓 Formal" };
+        let ri = 0,
+          rScore = 0,
+          rDone = false;
+        const rW = document.getElementById("regWord"),
+          rFb = document.getElementById("regFb"),
+          rS = document.getElementById("regScore"),
+          rShow = document.getElementById("regShow");
+        const regBtns = [...document.querySelectorAll("[data-reg]")];
+        const showReg = () => {
+          rW.textContent = regItems[ri][0];
+          rFb.textContent = "";
+          rDone = false;
+          regBtns.forEach((b) => {
+            b.classList.remove("picked", "bad");
+            b.textContent =
+              b.dataset.reg === "inf" ? "👫 Friends" : "🎓 Formal";
+          });
+          rShow.classList.remove("shown");
+          rShow.textContent = "👁 Show answer";
+        };
+        const regAnswer = (prefix) => {
+          const [w, k, en] = regItems[ri];
+          rFb.textContent = prefix + regLabel[k] + " · „" + w + "“ = " + en;
+          regBtns.forEach((b) => {
+            if (b.dataset.reg === k) {
+              b.classList.remove("bad");
+              b.classList.add("picked");
+              if (!b.textContent.startsWith("✓"))
+                b.textContent = "✓ " + b.textContent;
+            }
+          });
+          rDone = true;
+        };
+        regBtns.forEach(
+          (b) =>
+            (b.onclick = () => {
+              if (rDone) return;
+              if (b.dataset.reg === regItems[ri][1]) {
+                rS.textContent = ++rScore;
+                rFb.style.color = "var(--teal)";
+                regAnswer("✓ Richtig! ");
+              } else {
+                b.classList.add("picked", "bad");
+                if (!b.textContent.startsWith("✗"))
+                  b.textContent = "✗ " + b.textContent;
+                rFb.textContent = "✗ Not this one. Try the other button.";
+                rFb.style.color = "#FF9A8A";
+              }
+            }),
+        );
+        rShow.onclick = () => {
+          rFb.style.color = "#5FE0D3";
+          regAnswer("👁 Answer: ");
+          rShow.classList.add("shown");
+          rShow.textContent = "✓ Answer shown";
+          speak(regItems[ri][0]);
+        };
+        document.getElementById("regNext").onclick = () => {
+          ri = (ri + 1) % regItems.length;
+          showReg();
+        };
+
+        /* ---------- activity 2 situations ---------- */
+        const who = {
+          f: ["👫 You are talking to a friend", "var(--yellow)"],
+          c: ["🎒 You are talking to a classmate", "var(--teal)"],
+          b: ["💼 You are talking to your boss", "var(--lilac)"],
+          p: ["🎓 You are talking to your professor", "var(--lilac)"],
+          k: ["🤝 You are talking to a customer", "var(--lilac)"],
+          m: ["👔 You are in a work meeting", "var(--lilac)"],
+        };
+        const FORMAL = "bpkm";
+        const sits = [
+          ["Ich habe die Prüfung bestanden!", "I passed the exam!", "f"],
+          [
+            "Ich habe Tickets für das Konzert!",
+            "I have tickets for the concert!",
+            "f",
+          ],
+          [
+            "Mein Handy hält eine Woche!",
+            "My phone battery lasts a week!",
+            "c",
+          ],
+          ["Ich habe die Stelle bekommen!", "I got the job!", "f"],
+          [
+            "Ich habe in drei Monaten Spanisch gelernt.",
+            "I learned Spanish in three months.",
+            "c",
+          ],
+          [
+            "Die Aussicht vom Berg ist toll!",
+            "The view from the mountain is great!",
+            "f",
+          ],
+          ["Wir haben den Auftrag bekommen.", "We won the contract.", "b"],
+          [
+            "Hier ist mein neues Konzept für das Projekt.",
+            "Here is my new concept for the project.",
+            "b",
+          ],
+          [
+            "Ihr Team hat den ersten Platz gewonnen.",
+            "Your team won first place.",
+            "p",
+          ],
+          [
+            "Hier sind die Ergebnisse unserer Studie.",
+            "Here are the results of our study.",
+            "p",
+          ],
+          [
+            "Wir möchten Ihr Produkt kaufen.",
+            "We would like to buy your product.",
+            "k",
+          ],
+          [
+            "Der Umsatz ist um 20 Prozent gestiegen.",
+            "Sales went up by 20 percent.",
+            "m",
+          ],
+        ];
+        const goodAns = {
+          casual: [
+            ["Mega!", "Amazing!"],
+            ["Das ist der Hammer!", "This is awesome!"],
+            ["Echt cool!", "Really cool!"],
+            ["Der Wahnsinn!", "Incredible!"],
+          ],
+          formal: [
+            ["Sehr beeindruckend!", "Very impressive!"],
+            ["Exzellent!", "Excellent!"],
+            ["Sehr gut!", "Very good!"],
+            ["Bemerkenswert!", "Remarkable!"],
+            ["Außerordentlich!", "Extraordinary!"],
+          ],
+        };
+        let si = 0;
+        const sB = document.getElementById("sitBadge"),
+          sDe = document.getElementById("sitDe"),
+          sEn = document.getElementById("sitEn"),
+          sAns = document.getElementById("sitAns"),
+          sShow = document.getElementById("sitShow");
+        const hideSit = () => {
+          sAns.classList.remove("show");
+          sShow.classList.remove("shown");
+          sShow.textContent = "👁 Show good answers";
+        };
+        const nextSit = (formal) => {
+          let n;
+          do {
+            n = Math.floor(Math.random() * sits.length);
+          } while (n === si || FORMAL.includes(sits[n][2]) !== formal);
+          si = n;
+          const [de, en, w] = sits[si];
+          sDe.textContent = "„" + de + "“";
+          sEn.textContent = "🇬🇧 " + en;
+          sB.textContent = who[w][0];
+          sB.style.background = who[w][1];
+          hideSit();
+        };
+        document.getElementById("sitNext").onclick = () => nextSit(false);
+        document.getElementById("sitFormal").onclick = () => nextSit(true);
+        sShow.onclick = () => {
+          if (sAns.classList.contains("show")) return hideSit();
+          const formal = FORMAL.includes(sits[si][2]);
+          sAns.innerHTML =
+            '<span class="sm" style="font-weight:800">' +
+            (formal ? "🎓 Formal is better here:" : "👫 Casual is fine here:") +
+            '</span><div class="list">' +
+            goodAns[formal ? "formal" : "casual"]
+              .map(
+                ([d, e]) =>
+                  '<span><b class="say">„' +
+                  d +
+                  '“</b> <span class="en">= ' +
+                  e +
+                  "</span></span>",
+              )
+              .join("") +
+            "</div>";
+          sAns.classList.add("show");
+          sShow.classList.add("shown");
+          sShow.textContent = "✓ Answers shown · hide";
+        };
+
+        /* ---------- scale slider ---------- */
+        const sc = document.getElementById("sc"),
+          cards = [...document.querySelectorAll("#scale .card")],
+          face = document.getElementById("face");
+        const faces = ["🙂", "😐", "😒", "😱"];
+        const setScale = () => {
+          const v = +sc.value;
+          cards.forEach((c, i) => {
+            c.classList.toggle("dim", i !== v - 1);
+            c.classList.toggle("on", i === v - 1);
+          });
+          face.textContent = faces[v - 1];
+        };
+        sc.addEventListener("input", () => {
+          setScale();
+          speak(cards[+sc.value - 1].querySelector("h3").textContent);
+        });
+        cards.forEach((c, i) =>
+          c.addEventListener("click", () => {
+            sc.value = i + 1;
+            setScale();
+          }),
+        );
+        setScale();
+
+        /* ---------- activity 3 spinner ---------- */
+        const nouns = [
+          ["der", "Kaffee", "coffee"],
+          ["der", "Winter", "winter"],
+          ["der", "Film", "film"],
+          ["die", "Mensa", "cafeteria"],
+          ["die", "Musik", "music"],
+          ["die", "Stadt", "town"],
+          ["das", "Wetter", "weather"],
+          ["das", "Essen", "food"],
+          ["das", "Handy", "phone"],
+        ];
+        const love = {
+          adj: ["mega", "echt cool", "spitze", "fantastisch", "voll krass"],
+          sein: ["der Hammer", "der Wahnsinn", "Bombe"],
+        };
+        const hate = {
+          adj: ["gar nicht cool"],
+          sein: [
+            "nicht mein Ding",
+            "Mist",
+            "’ne Katastrophe",
+            "zum Vergessen",
+            "nicht der Brüller",
+          ],
+        };
+        const EN = {
+          mega: "amazing",
+          "echt cool": "really cool",
+          spitze: "great",
+          fantastisch: "fantastic",
+          "voll krass": "totally rad",
+          "der Hammer": "awesome",
+          "der Wahnsinn": "incredible",
+          Bombe: "brilliant",
+          "gar nicht cool": "not cool at all",
+          "nicht mein Ding": "not my thing",
+          Mist: "crap",
+          "’ne Katastrophe": "a disaster",
+          "zum Vergessen": "forgettable",
+          "nicht der Brüller": "not great",
+        };
+        const pick = (a) => a[Math.floor(Math.random() * a.length)];
+        const acc = (g) => (g === "der" ? "den" : g);
+        const cap = (s) => s[0].toUpperCase() + s.slice(1);
+        let sp = null;
+        const spArt = document.getElementById("spArt"),
+          spNoun = document.getElementById("spNoun"),
+          spEn = document.getElementById("spEn"),
+          spMood = document.getElementById("spMood"),
+          spAns = document.getElementById("spAns"),
+          spA1 = document.getElementById("spA1"),
+          spA2 = document.getElementById("spA2"),
+          spShow = document.getElementById("spShow");
+        const spin = () => {
+          const [g, w, en] = pick(nouns),
+            isLove = Math.random() < 0.5,
+            m = isLove ? love : hate;
+          sp = { g, w, en, isLove, adj: pick(m.adj), sein: pick(m.sein) };
+          spArt.textContent = "___";
+          spNoun.textContent = w;
+          spEn.textContent = en + " · " + g + " " + w;
+          spMood.textContent = isLove ? "😍 Love it" : "😒 Hate it";
+          spMood.style.background = isLove ? "var(--yellow)" : "var(--lilac)";
+          spAns.classList.remove("show");
+          spShow.classList.remove("shown");
+          spShow.textContent = "👁 Show answer";
+        };
+        document.getElementById("spGo").onclick = spin;
+        spShow.onclick = () => {
+          if (!sp) spin();
+          if (spAns.classList.contains("show")) {
+            spAns.classList.remove("show");
+            spShow.classList.remove("shown");
+            spShow.textContent = "👁 Show answer";
+            spArt.textContent = "___";
+            return;
+          }
+          spShow.classList.add("shown");
+          spShow.textContent = "✓ Answer shown · hide";
+          document.getElementById("spA1en").textContent =
+            "🇬🇧 I find the " + sp.en + " " + EN[sp.adj] + "!";
+          document.getElementById("spA2en").textContent =
+            "🇬🇧 The " + sp.en + " is " + EN[sp.sein] + "!";
+          spArt.textContent = acc(sp.g);
+          spA1.innerHTML =
+            'B: „Ich finde <b style="color:#FF9A8A">' +
+            acc(sp.g) +
+            "</b> " +
+            sp.w +
+            " " +
+            sp.adj +
+            '!“ <span class="sm" style="color:#C9D3EA">· finden → acc.</span>';
+          spA1.dataset.say =
+            "Ich finde " + acc(sp.g) + " " + sp.w + " " + sp.adj + "!";
+          spA2.innerHTML =
+            'or „<b style="color:#5FE0D3">' +
+            cap(sp.g) +
+            "</b> " +
+            sp.w +
+            " ist " +
+            sp.sein +
+            '!“ <span class="sm" style="color:#C9D3EA">· sein → nom.</span>';
+          spA2.dataset.say = cap(sp.g) + " " + sp.w + " ist " + sp.sein + "!";
+          spAns.classList.add("show");
+          speak(spA1.dataset.say);
+        };
+        spin();
+
+        /* ---------- rating rain ---------- */
+        const rain = (set) => {
+          for (let k = 0; k < 36; k++) {
+            const e = document.createElement("span");
+            e.className = "rain";
+            e.textContent = pick(set);
+            e.style.left = Math.random() * 100 + "vw";
+            e.style.animationDuration = 1.8 + Math.random() * 1.8 + "s";
+            e.style.animationDelay = Math.random() * 0.8 + "s";
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 4800);
+          }
+        };
+        const rG = document.getElementById("rateGood"),
+          rB = document.getElementById("rateBad");
+        rG.onclick = () => {
+          rain(["🎉", "😍", "⭐", "🥳", "🔨"]);
+          speak("Mega! Danke schön!");
+          rG.classList.add("shown");
+          rG.textContent = "✓ 😍 Mega! = Amazing!";
+        };
+        rB.onclick = () => {
+          rain(["🌧️", "😒", "🧀", "💧"]);
+          speak("Oh nein! Das ist Mist!");
+          rB.classList.add("shown");
+          rB.textContent = "✓ 😒 Mist! = Crap!";
+        };
+
+        /* ---------- start ---------- */
+        const fromHash = () => {
+          const h = parseInt(location.hash.slice(1), 10);
+          return h >= 1 && h <= slides.length ? h - 1 : null;
+        };
+        window.addEventListener("hashchange", () => {
+          const h = fromHash();
+          if (h !== null && h !== cur) go(h);
+        });
+        go(fromHash() ?? 0, 1);
+      })();
+    </script>
+  </body>
 </html>
